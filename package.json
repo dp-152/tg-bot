@@ -1,0 +1,19 @@
+{
+  "name": "tg-bot",
+  "version": "0.0.1",
+  "description": "An automated scheduled sender for telegram",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dp-152/tg-bot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dp-152/tg-bot/issues"
+  },
+  "homepage": "https://github.com/dp-152/tg-bot#readme"
+}
