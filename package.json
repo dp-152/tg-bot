@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/dp-152/tg-bot/issues"
   },
-  "homepage": "https://github.com/dp-152/tg-bot#readme"
+  "homepage": "https://github.com/dp-152/tg-bot#readme",
+  "dependencies": {
+    "axios": "^0.23.0"
+  }
 }
