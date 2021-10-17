@@ -1,6 +1,7 @@
 /**
  * @typedef {"MarkdownV2" | "HTML"} ParseMode
  * @typedef {import('fs').ReadStream} FsReadStream
+ * @typedef { TgChatSendMessageModel | TgChatSendPhotoModel | TgChatSendDocumentModel | TgChatSendVideoModel | TgChatSendAnimationModel | TgChatSendMediaGroupModel } TgChatModel
  */
 
 /**
