@@ -7,6 +7,7 @@ const INPUT_MEDIA_DOCUMENT = "document";
 /**
  * @typedef {"MarkdownV2" | "HTML"} ParseMode
  * @typedef {import('fs').ReadStream} FsReadStream
+ * @typedef {InputMediaPhoto | InputMediaVideo | InputMediaAnimation | InputMediaAudio | InputMediaDocument } InputMedia
  */
 
 /**
