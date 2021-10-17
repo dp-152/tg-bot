@@ -2,7 +2,7 @@ const fs = require("fs");
 
 const defaultOptions = {
   botAPIKey: "",
-  targetChatID: "0",
+  targetChatID: 0,
   loadPath: "",
   historyPath: "",
   APIServer: "http://api.telegram.org",
