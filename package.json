@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/dp-152/tg-bot#readme",
   "dependencies": {
-    "axios": "^0.23.0"
+    "axios": "^0.23.0",
+    "form-data": "^4.0.0"
   }
 }
