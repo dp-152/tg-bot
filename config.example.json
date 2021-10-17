@@ -1,0 +1,8 @@
+{
+  "botAPIKey": "",
+  "targetChatID": "0",
+  "loadPath": "",
+  "historyPath": "",
+  "APIServer": "http://api.telegram.org",
+  "handleFiles": "server"
+}
