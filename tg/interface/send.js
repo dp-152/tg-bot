@@ -41,8 +41,8 @@ function send(data, route, isReadStream = false) {
 }
 
 /**
- *
- * @param {(string|number)} chatID - Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+ * Sends a text message
+ * @param {(string|number)} chatID - Unique identifier for the target chat or username of the target channel (in the format [at]channelusername)
  * @param {string} text - Text of the message to be sent, 1-4096 characters after entities parsing
  * @param {ParseMode} [parseMode] - (Optional) Mode for parsing entities in the message text
  * @param {Array.<MessageEntity>} [entities] - (Optional) A JSON-serialized list of special entities that appear in message text, which can be specified instead of parse_mode
@@ -75,14 +75,15 @@ function sendMessage(
     allow_sending_without_reply: allowSendingWithoutReply,
     reply_markup: replyMarkup,
   };
+
   const route = "/sendMessage";
 
   return send(data, route);
 }
 
 /**
- *
- * @param {(string|number)} chatID - Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+ * Sends a picture
+ * @param {(string|number)} chatID - Unique identifier for the target chat or username of the target channel (in the format [at]channelusername)
  * @param {(FsReadStream|string)} photo - Photo to send. Pass a file_id as String to send a photo that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a photo from the Internet, or upload a new photo using multipart/form-data. The photo must be at most 10 MB in size. The photo's width and height must not exceed 10000 in total. Width and height ratio must be at most 20
  * @param {string} [caption] - (Optional) Photo caption (may also be used when resending photos by file_id), 0-1024 characters after entities parsing
  * @param {ParseMode} [parseMode] - (Optional) Mode for parsing entities in the message text
@@ -122,8 +123,8 @@ function sendPhoto(
 }
 
 /**
- *
- * @param {(string|number)} chatID - Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+ * Sends a document
+ * @param {(string|number)} chatID - Unique identifier for the target chat or username of the target channel (in the format [at]channelusername)
  * @param {(FsReadStream|string)} document - File to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data.
  * @param {(FsReadStream|string)} [thumb] - (Optional) Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>.
  * @param {string} [caption] - (Optional) Document caption (may also be used when resending documents by file_id), 0-1024 characters after entities parsing
@@ -162,14 +163,15 @@ function sendDocument(
     allow_sending_without_reply: allowSendingWithoutReply,
     reply_markup: replyMarkup,
   };
+
   const route = "/sendDocument";
 
   return send(data, route, typeof document !== "string");
 }
 
 /**
- *
- * @param {(string|number)} chatID - Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+ * Sends a video
+ * @param {(string|number)} chatID - Unique identifier for the target chat or username of the target channel (in the format [at]channelusername)
  * @param {(FsReadStream|string)} video - Video to send. Pass a file_id as String to send a video that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a video from the Internet, or upload a new video using multipart/form-data.
  * @param {number} [duration] - (Optional) Duration of sent video in seconds
  * @param {number} [width] - (Optional) Video width
@@ -221,8 +223,8 @@ function sendVideo(
 }
 
 /**
- *
- * @param {(string|number)} chatID - Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+ * Sends an animation (gif)
+ * @param {(string|number)} chatID - Unique identifier for the target chat or username of the target channel (in the format [at]channelusername)
  * @param {(FsReadStream|string)} animation - Animation to send. Pass a file_id as String to send a animation that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a animation from the Internet, or upload a new animation using multipart/form-data.
  * @param {number} [duration] - (Optional) Duration of sent animation in seconds
  * @param {number} [width] - (Optional) Animation width
@@ -274,8 +276,8 @@ function sendAnimation(
 }
 
 /**
- *
- * @param {(string|number)} chatID - Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+ * Sends a group of media files (album)
+ * @param {(string|number)} chatID - Unique identifier for the target chat or username of the target channel (in the format [at]channelusername)
  * @param {Array.<InputMedia>} mediaArr - A JSON-serialized array describing messages to be sent, must include 2-10 items
  * @param {boolean} disableNotification - (Optional) Sends messages silently. Users will recieve a notification with no sound.
  * @param {number} replyToMessageID - (Optional) If the messages are a reply, ID of the original message
