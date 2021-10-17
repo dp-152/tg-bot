@@ -3,8 +3,8 @@ const fs = require("fs");
 const options = {
   botAPIKey: null,
   targetChatID: null,
-  loadPath: "",
-  historyPath: "",
+  loadPath: "./content",
+  historyPath: "./content-hist",
   APIServer: "http://api.telegram.org",
   handleFiles: "remote",
 };
