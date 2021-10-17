@@ -4,5 +4,5 @@
   "loadPath": "",
   "historyPath": "",
   "APIServer": "http://api.telegram.org",
-  "handleFiles": "server"
+  "handleFiles": "remote"
 }

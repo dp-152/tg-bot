@@ -6,7 +6,7 @@ const defaultOptions = {
   loadPath: "",
   historyPath: "",
   APIServer: "http://api.telegram.org",
-  handleFiles: "server",
+  handleFiles: "remote",
 };
 
 const jsonString = fs.readFileSync("../config.json").toString();
