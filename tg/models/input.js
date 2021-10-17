@@ -26,7 +26,7 @@ class InputMedia {
     this.type = type;
     this.media = media;
     if (thumb != null) this.thumb = thumb;
-    if (caption != null) this.caption = capiton;
+    if (caption != null) this.caption = caption;
     if (parseMode != null) this.parse_mode = parseMode;
     if (captionEntities != null) this.caption_entities = captionEntities;
   }
