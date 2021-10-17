@@ -22,7 +22,7 @@ function send(tgData, isReadStream = false) {
         formData.append(key, tgData[key]);
       }
     }
-    return axios.post(botServerUrl + botAPIToken + tgData.path, formData, {
+    return axios.post(botServerUrl + botFullPath + tgData.path, formData, {
       headers: formData.getHeaders(),
     });
   } else {
