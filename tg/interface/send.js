@@ -19,6 +19,12 @@ const botFullPath = `/bot${botAPIToken}`;
  * @return {Promise} HTTP request promise
  */
 function send(data, route, isReadStream = false) {
+  for (const key in data) {
+    if (data.hasOwnProperty(key)) {
+      if (data[key] == null) delete data[key];
+    }
+  }
+
   if (isReadStream) {
     const formData = new FormData();
     for (const key in data) {
