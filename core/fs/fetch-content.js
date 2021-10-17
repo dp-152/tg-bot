@@ -10,12 +10,12 @@ exports.filesPromise = dirContentsPromise
     const promises = res.map(async el => {
       return {
         name: el,
-        data: await fs.stat(path.join(options.loadPath, el)),
+        stat: await fs.stat(path.join(options.loadPath, el)),
       };
     });
     const fileList = await Promise.all(promises);
     return fileList.sort(
-      (a, b) => a.data.mtime.getTime() - b.data.mtime.getTime()
+      (a, b) => a.stat.mtime.getTime() - b.stat.mtime.getTime()
     );
   })
   .catch(err => {
