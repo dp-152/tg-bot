@@ -147,8 +147,8 @@ class TgChatSendMediaModel extends TgChatSendModel {
       allowSendingWithoutReply,
       replyMarkup
     );
-    this.caption = caption;
-    this.captionEntities = captionEntities;
+    if (caption != null) this.caption = caption;
+    if (captionEntities != null) this.captionEntities = captionEntities;
   }
 }
 
