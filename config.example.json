@@ -1,0 +1,8 @@
+{
+  "botAPIKey": "1234567890:aBcdEfgHijKlmNOPqrstuVwxYzAbCDefGhi",
+  "targetChatID": 12345678901,
+  "loadPath": "./content",
+  "historyPath": "./content/hist",
+  "APIServer": "http://api.telegram.org",
+  "handleFiles": "remote"
+}

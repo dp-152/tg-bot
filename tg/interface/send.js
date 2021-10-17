@@ -1,8 +1,9 @@
 const axios = require("axios").default;
 const FormData = require("form-data");
 
-const { botAPIToken, botServerUrl } = require("../../util/settings");
-const botFullPath = `/bot${botAPIToken}`;
+const { options } = require("../../util/config");
+const botServerUrl = options.APIServer;
+const botFullPath = `/bot${options.botAPIKey}`;
 
 /**
  * @typedef {"MarkdownV2" | "HTML"} ParseMode
