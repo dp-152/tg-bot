@@ -9,7 +9,7 @@ const defaultOptions = {
   handleFiles: "remote",
 };
 
-const jsonString = fs.readFileSync("../config.json").toString();
+const jsonString = fs.readFileSync("./config.json").toString();
 
 const configFileOptions = JSON.parse(jsonString);
 
