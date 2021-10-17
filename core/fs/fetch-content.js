@@ -7,6 +7,7 @@ const dirContentsPromise = fs.readdir(options.loadPath);
 
 exports.filesPromise = dirContentsPromise
   .then(async res => {
+    res = res.sort();
     const promises = res.map(async el => {
       return {
         name: el,
