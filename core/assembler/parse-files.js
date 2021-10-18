@@ -23,7 +23,7 @@ function parseFileList(fileList) {
         // Grab the file extension
         currFile.ext = path.extname(currFile.name);
         // Find if file extension is known
-        currFile.type = types.knownMedia.find(
+        currFile.type = types.knownMedias.find(
           el => el.exts.indexOf(currFile.ext) >= 0
         ).type;
 
