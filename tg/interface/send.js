@@ -10,7 +10,9 @@ const botFullPath = `/bot${options.botAPIKey}`;
  */
 
 /**
- *
+ * Performs a send to Telegram's bot API server
+ * Will send all the data contained in the tgData object
+ * to the route declared in tgData.route
  * @param {TgChatModel} tgData - TgModel data object to be sent
  * @param {boolean} isReadStream - True if the attachment in the data object is a readStream
  * @return {Promise} HTTP request promise

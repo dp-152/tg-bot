@@ -104,7 +104,7 @@ class TgChatSendMessageModel extends TgChatSendModel {
       allowSendingWithoutReply,
       replyMarkup
     );
-    this.path = "/sendMessage";
+    this.route = "/sendMessage";
   }
 }
 
@@ -193,7 +193,7 @@ class TgChatSendPhotoModel extends TgChatSendMediaModel {
       replyMarkup
     );
 
-    this.path = "/sendPhoto";
+    this.route = "/sendPhoto";
     this.photo = photo;
   }
 }
@@ -239,7 +239,7 @@ class TgChatSendDocumentModel extends TgChatSendMediaModel {
       allowSendingWithoutReply,
       replyMarkup
     );
-    this.path = "/sendDocument";
+    this.route = "/sendDocument";
     this.document = document;
     if (thumb != null) this.thumb = thumb;
     if (disableContentTypeDetection != null) {
@@ -293,7 +293,7 @@ class TgChatSendVideoModel extends TgChatSendMediaModel {
       allowSendingWithoutReply,
       replyMarkup
     );
-    this.path = "/sendVideo";
+    this.route = "/sendVideo";
     this.video = video;
     if (duration != null) this.duration = duration;
     if (width != null) this.width = width;
@@ -354,7 +354,7 @@ class TgChatSendAnimationModel extends TgChatSendVideoModel {
       replyMarkup
     );
     delete this.video;
-    this.path = "/sendAnimation";
+    this.route = "/sendAnimation";
     this.animation = animation;
   }
 }
@@ -388,7 +388,7 @@ class TgChatSendMediaGroupModel extends TgChatSendMediaModel {
       allowSendingWithoutReply,
       null
     );
-    this.path = "/sendMediaGroup";
+    this.route = "/sendMediaGroup";
     this.media = mediaArr;
   }
 }
