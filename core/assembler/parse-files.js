@@ -2,6 +2,8 @@ const path = require("path");
 
 const types = require("../models/types");
 
+const { options } = require("../../util/config");
+
 /**
  * Parses a list of files
  * Will append file extension, media type, thumbnail (if available) and caption (if available)
@@ -15,6 +17,7 @@ function parseFileList(fileList) {
       const parsedList = [];
 
       files.forEach(currFile => {
+        currFile.path = path.resolve(options.loadPath, currFile.name);
         // Return if file is in skip list
         if (skippedFileNames.indexOf(currFile.name) >= 0) return;
 
