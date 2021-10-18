@@ -17,16 +17,19 @@ function parseFileList(fileList) {
       const parsedList = [];
 
       files.forEach(currFile => {
+        // Grab the absolute file path
         currFile.path = path.resolve(options.loadPath, currFile.name);
-        // Return if file is in skip list
-        if (skippedFileNames.indexOf(currFile.name) >= 0) return;
 
-        // Grab the extension
+        // Grab the file extension
         currFile.ext = path.extname(currFile.name);
         // Find if file extension is known
         currFile.type = types.knownMedia.find(
           el => el.exts.indexOf(currFile.ext) >= 0
         ).type;
+
+        // If file is in skip list, stop processing here
+        if (skippedFileNames.indexOf(currFile.name) >= 0) return;
+
         // Unknown extensions are passed as documents
         if (!currFile.type) currFile.type = types.TYPE_MEDIA_DOC;
         // If a video or GIF file has a "_animation" suffix,
