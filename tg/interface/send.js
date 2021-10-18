@@ -25,11 +25,11 @@ function send(tgData, isReadStream = false) {
         formData.append(key, tgData[key]);
       }
     }
-    return axios.post(botServerUrl + botFullPath + tgData.path, formData, {
+    return axios.post(botServerUrl + botFullPath + tgData.route, formData, {
       headers: formData.getHeaders(),
     });
   } else {
-    return axios.post(botServerUrl + botFullPath + tgData.path, tgData);
+    return axios.post(botServerUrl + botFullPath + tgData.route, tgData);
   }
 }
 
