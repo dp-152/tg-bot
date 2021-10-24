@@ -4,11 +4,16 @@ const models = require("../../tg/models/chat");
 const types = require("../models/types");
 
 const { options } = require("../../util/config");
-const { fetchSortedFileList } = require("../fs/fetch-content");
-const { parseFileList } = require("./parse-files");
 
+
+/**
+ * Detects the proper parse mode for a text file
+ * @param {Object} file - A file object containing a text file with parsed metadata
+ * @return {string|null} - A string containing the proper parse mode for the file. Returns null if file object is empty or no parse mode is found for the file type.
+ */
 function getParseMode(file) {
   if (!file) return null;
+
   let textParseMode;
   if (file.ext === types.TYPE_EXT_MD) {
     textParseMode = "MarkdownV2";
@@ -23,10 +28,16 @@ function getParseMode(file) {
   return textParseMode;
 }
 
-function createQueue(queue) {
-  const fileList = parseFileList(fetchSortedFileList());
 
-  return fileList
+/**
+ * Transforms a parsed list of files into a queue of messages
+ * @param {Promise} parsedFileList - A parsed file list containing file types
+ * @return {Promise} List of messages ready to be sent
+ */
+function createQueue(parsedFileList) {
+  const queue = [];
+
+  return parsedFileList
     .then(files => {
       files.forEach(file => {
         // Final object that will be pushed into the queue
