@@ -65,7 +65,9 @@ function createQueue(parsedFileList) {
             messageObj = new models.TgChatSendPhotoModel(
               options.targetChatID,
               `file://${file.path}`,
-              file.captionFile ? `file://${file.captionFile.path}` : null,
+              file.captionFile
+                ? fs.readFileSync(file.captionFile.path).toString()
+                : null,
               getParseMode(file.captionFile),
               null,
               null,
@@ -139,6 +141,7 @@ function createQueue(parsedFileList) {
         // Push message to send queue
         queue.push(messageObj);
       });
+      return queue;
     })
     .catch(err => {
       console.log(err);
