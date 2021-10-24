@@ -16,6 +16,9 @@ function parseFileList(fileList) {
       const skippedFileNames = [];
       const parsedList = [];
 
+      // TODO: Ignore directories
+      // TODO: Read text file contents
+      // TODO: Escape reserved characters inside text file
       files.forEach(currFile => {
         // Grab the absolute file path
         currFile.path = path.resolve(options.loadPath, currFile.name);
