@@ -1,8 +1,4 @@
-const path = require("path");
-
 const types = require("../models/types");
-
-const { options } = require("../../util/config");
 
 /**
  * Parses a list of files
@@ -20,11 +16,6 @@ function parseFileList(fileList) {
       // TODO: Read text file contents
       // TODO: Escape reserved characters inside text file
       files.forEach(currFile => {
-        // Grab the absolute file path
-        currFile.path = path.resolve(options.loadPath, currFile.name);
-
-        // Grab the file extension
-        currFile.ext = path.extname(currFile.name);
         // Find if file extension is known
         currFile.type = types.knownMedias.find(
           el => el.exts.indexOf(currFile.ext) >= 0
