@@ -10,9 +10,6 @@ function parseFileList(fileList) {
   const skippedFileNames = [];
   const parsedList = [];
 
-  // TODO: Ignore directories
-  // TODO: Read text file contents
-  // TODO: Escape reserved characters inside text file
   fileList.forEach(currFile => {
     // Find if file extension is known
     fileType = types.knownMedias.find(
