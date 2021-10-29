@@ -1,1 +1,3 @@
-console.log("Hello, world!");
+const { initSendJob } = require("./core/routine/sender");
+
+initSendJob();
