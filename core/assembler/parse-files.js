@@ -46,7 +46,7 @@ function parseFileList(fileList) {
       ].indexOf(currFile.type) >= 0
     ) {
       const thumbFileName = currFile.name + types.TYPE_SUFFIX_THUMB;
-      const thumbFile = files.find(el => {
+      const thumbFile = fileList.find(el => {
         return (
           el.name === thumbFileName + types.TYPE_EXT_JPG ||
           el.name === thumbFileName + types.TYPE_EXT_JPEG
@@ -62,7 +62,7 @@ function parseFileList(fileList) {
     // TODO: Condense this double iteration into one?
     if (currFile.type !== types.TYPE_MEDIA_TEXT) {
       const captionFileName = currFile.name + types.TYPE_SUFFIX_CAPTION;
-      const captionFile = files.find(el => {
+      const captionFile = fileList.find(el => {
         return (
           el.name === captionFileName + types.TYPE_EXT_TXT ||
           el.name === captionFileName + types.TYPE_EXT_MD ||
@@ -77,7 +77,12 @@ function parseFileList(fileList) {
     }
 
     // Push current file to the return list
-    parsedList.push(currFile);
+    // Only push if file is not caption or thumb
+    if (
+      !currFile.name.match(/^.*\.[a-zA-Z0-9]+_(caption|thumb)\.[a-zA-Z0-9]+$/g)
+    ) {
+      parsedList.push(currFile);
+    }
   });
   return parsedList;
 }
