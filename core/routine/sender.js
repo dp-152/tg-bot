@@ -8,6 +8,7 @@ async function sendJob() {
   for (msg of list) {
     console.log(msg);
     await send(msg.data);
+    addToExclude(msg);
     await new Promise(res => {
       setTimeout(res, 5000);
     });
