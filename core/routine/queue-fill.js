@@ -17,7 +17,6 @@ function removeInQueue(inputList) {
     if (
       inputList[i].match(/^.*\.[a-zA-Z0-9]+_(caption|thumb)\.[a-zA-Z0-9]+$/g)
     ) {
-      console.log(`File ${inputList[i]} is thumb or caption`);
       outputList.push(inputList[i]);
       continue;
     }
@@ -25,7 +24,6 @@ function removeInQueue(inputList) {
     let match = false;
     for (let j = 0; j < qFileNames.length; j++) {
       if (inputList[i] === qFileNames[j]) {
-        console.log(`File ${inputList[i]} already in queue (at index ${j})`);
         match = true;
         break;
       }
