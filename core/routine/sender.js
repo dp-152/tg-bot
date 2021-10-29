@@ -15,7 +15,7 @@ async function sendJob() {
       setTimeout(res, 5000);
     });
   }
-  deleteN(options.sendAtOnce);
+  deleteN(list.length);
 }
 
 async function initSendJob() {
