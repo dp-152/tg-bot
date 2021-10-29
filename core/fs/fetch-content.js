@@ -5,7 +5,7 @@ function fetchDirContent(rootPath) {
   return fs.readdir(rootPath).then(res => res.sort());
 }
 
-async function sortFilesByDate(rootPath, fileNamesList) {
+async function getFileMeta(rootPath, fileNamesList) {
   const promises = fileNamesList.reduce(async (result, el) => {
     result = await result;
     const stat = await fs.stat(path.join(rootPath, el));
@@ -26,6 +26,10 @@ async function sortFilesByDate(rootPath, fileNamesList) {
     return result;
   }, []);
   const fileList = await promises;
+  return fileList;
+}
+
+function sortFilesByDate(fileList) {
   return fileList.sort(
     (a, b) => a.stat.mtime.getTime() - b.stat.mtime.getTime()
   );
@@ -33,5 +37,6 @@ async function sortFilesByDate(rootPath, fileNamesList) {
 
 module.exports = {
   fetchDirContent,
+  getFileMeta,
   sortFilesByDate,
 };
