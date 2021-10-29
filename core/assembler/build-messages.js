@@ -41,7 +41,7 @@ function mdV2Escape(contents) {
  * @param {Promise} parsedFileList - A parsed file list containing file types
  * @return {Promise} List of messages ready to be sent
  */
-async function createQueue(parsedFileList) {
+async function createMessages(parsedFileList) {
   const queue = [];
 
   return await parsedFileList
@@ -175,5 +175,5 @@ async function createQueue(parsedFileList) {
 }
 
 module.exports = {
-  createQueue,
+  createMessages,
 };
