@@ -17,7 +17,7 @@ function parseFileList(fileList) {
     // Find if file extension is known
     currFile.type = types.knownMedias.find(
       el => el.exts.indexOf(currFile.ext) >= 0
-    ).type;
+    ).type; // will output an error if the file is unknown
 
     // If file is in skip list, stop processing here
     if (skippedFileNames.indexOf(currFile.name) >= 0) return;
