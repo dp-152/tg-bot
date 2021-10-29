@@ -5,8 +5,8 @@ function addToQueue(messages) {
   queue.push(...messages);
 }
 
-function addToExclude(messages) {
-  exclude.push(...messages);
+function addToExclude(message) {
+  exclude.push(message);
 }
 
 function pullN(n) {
