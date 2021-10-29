@@ -2,8 +2,9 @@ const queue = [];
 const exclude = [];
 
 function addToQueue(messages) {
-  console.log("Appending to queue...");
+  console.log(`Appending ${messages.length} messages to queue...`);
   queue.push(...messages);
+  console.log(`Current queue size: ${queue.length}`);
 }
 
 function addToExclude(message) {
@@ -20,6 +21,7 @@ function pullN(n) {
 function deleteN(n) {
   console.log(`Deleting ${n} elements from the top of the queue`);
   queue.splice(0, n);
+  console.log(`Current queue size: ${queue.length}`);
 }
 
 function pullExclude() {
