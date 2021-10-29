@@ -7,6 +7,8 @@ const options = {
   historyPath: "./content-hist",
   APIServer: "http://api.telegram.org",
   handleFiles: "remote",
+  sendAtOnce: 10,
+  sendEvery: 30,
 };
 
 const jsonString = fs.readFileSync("./config.json").toString();
