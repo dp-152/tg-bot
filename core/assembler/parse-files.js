@@ -15,9 +15,11 @@ function parseFileList(fileList) {
   // TODO: Escape reserved characters inside text file
   fileList.forEach(currFile => {
     // Find if file extension is known
-    currFile.type = types.knownMedias.find(
+    fileType = types.knownMedias.find(
       el => el.exts.indexOf(currFile.ext) >= 0
-    ).type; // will output an error if the file is unknown
+    );
+
+    currFile.type = fileType && fileType.type;
 
     // If file is in skip list, stop processing here
     if (skippedFileNames.indexOf(currFile.name) >= 0) return;
