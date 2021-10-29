@@ -14,6 +14,11 @@ async function moveFile(filePath) {
 }
 
 async function moveSentFiles(fileList) {
+  try {
+    await fs.mkdir(options.historyPath);
+  } catch (err) {
+    if (err.code !== "EEXIST") throw err;
+  }
   const promises = [];
   for (file of fileList) {
     promises.push(moveFile(file.path));
