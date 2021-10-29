@@ -12,8 +12,9 @@ function addToExclude(message) {
 }
 
 function pullN(n) {
-  console.log(`Just sliced the queue. Gathered ${n} elements`);
-  return queue.slice(0, n);
+  const slice = queue.slice(0, n);
+  console.log(`Just sliced the queue. Gathered ${slice.length} elements`);
+  return slice;
 }
 
 function deleteN(n) {
