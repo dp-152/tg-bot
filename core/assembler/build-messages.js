@@ -42,7 +42,7 @@ function mdV2Escape(contents) {
  * @return {Promise} List of messages ready to be sent
  */
 async function createMessages(parsedFileList) {
-  const queue = [];
+  const msgList = [];
 
   return await parsedFileList
     .then(async files => {
@@ -163,10 +163,12 @@ async function createMessages(parsedFileList) {
             break;
           }
         }
+        // Append message object to file object
+        const fileObj = { ...file, data: messageObj };
         // Push message to send queue
-        queue.push(messageObj);
-      };
-      return queue;
+        msgList.push(fileObj);
+      }
+      return msgList;
     })
     .catch(err => {
       console.log(err);

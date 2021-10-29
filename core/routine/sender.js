@@ -8,7 +8,7 @@ function initSendJob() {
     const list = pullN(options.sendAtOnce);
     for (msg of list) {
       console.log(msg);
-      await send(msg);
+      await send(msg.data);
       await new Promise(res => {
         setTimeout(res, 5000);
       });
