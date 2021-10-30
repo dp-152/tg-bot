@@ -6,26 +6,27 @@ function fetchDirContent(rootPath) {
 }
 
 async function getFileMeta(rootPath, fileNamesList) {
-  const promises = fileNamesList.reduce(async (result, el) => {
-    result = await result;
-    const stat = await fs.stat(path.join(rootPath, el));
+  const fileList = [];
+
+  for (const fName of fileNamesList) {
+    const stat = await fs.stat(path.join(rootPath, fName));
+
+    // Gather stat data for current file
     if (!stat.isDirectory()) {
-      const fName = el;
       // Grab the absolute file path
       const fPath = path.resolve(rootPath, fName);
       // Grab the file extension
       const fExt = path.extname(fName);
 
-      result.push({
+      fileList.push({
         name: fName,
         path: fPath,
         ext: fExt,
         stat,
       });
     }
-    return result;
-  }, []);
-  const fileList = await promises;
+  }
+
   return fileList;
 }
 
