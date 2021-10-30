@@ -9,10 +9,16 @@ async function sendJob() {
     console.log(`Sending message from file ${msg.name}`);
     console.log(`- Has thumb: ${!!msg.thumbFile}`);
     console.log(`- Has caption: ${!!msg.captionFile}\n`);
+
     await send(msg.data);
     addToExclude(msg);
+
+    let timeout;
+    if (msg.bundleName) timeout = 40;
+    else timeout = 15;
+
     await new Promise(res => {
-      setTimeout(res, 5000);
+      setTimeout(res, timeout * 1000);
     });
   }
   deleteN(list.length);
