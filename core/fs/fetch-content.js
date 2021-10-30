@@ -1,8 +1,10 @@
 const fs = require("fs/promises");
 const path = require("path");
 
-function fetchDirContent(rootPath) {
-  return fs.readdir(rootPath).then(res => res.sort());
+async function fetchDirContent(rootPath) {
+  const dirContent = await fs.readdir(rootPath);
+  dirContent.sort();
+  return dirContent;
 }
 
 async function getFileMeta(rootPath, fileNamesList) {
@@ -32,7 +34,7 @@ async function getFileMeta(rootPath, fileNamesList) {
 
 function sortFilesByDate(fileList) {
   return fileList.sort(
-    (a, b) => a.stat.mtime.getTime() - b.stat.mtime.getTime()
+    (a, b) => a.stat.ctime.getTime() - b.stat.ctime.getTime()
   );
 }
 
