@@ -1,6 +1,7 @@
 const fs = require("fs/promises");
 
 const models = require("../../tg/models/chat");
+const inputFiles = require("../../tg/models/input");
 const types = require("../models/types");
 
 const { options } = require("../../util/config");
@@ -43,9 +44,39 @@ function mdV2Escape(contents) {
  */
 async function createMessages(parsedFileList) {
   const msgList = [];
+  const bundleList = [];
   for (const file of parsedFileList) {
     // Final object that will be pushed into the queue
     let messageObj;
+
+    // Check whether current file is part of a bundle
+    let isBundleMember = false;
+    let isBundleHead = false;
+
+    // RegEX matches the pattern <filename>{<zeroidx>}.<ext>
+    // Elects head based on base name plus index to the tenths place
+    // by separating into capture groups
+    const matchBundle = file.name.match(
+      /^(.*)\{([0-9]*)([0-9])\}\.[a-zA-Z0-9]+/
+    );
+
+    // If file is part of a bundle (RegEx matched), set flags accordingly
+    if (matchBundle) {
+      // Always a bundle member if the file matches the pattern
+      isBundleMember = true;
+      // Elect head by base name and tenths of index (groups 1 and 2)
+      file.bundleName = matchBundle[1] + "_" + matchBundle[2];
+      // Individual index set by last index digit (group 3)
+      file.bundleMemberIndex = +matchBundle[3];
+      for ([index, bundle] of bundleList.entries()) {
+        // Check if bundle already exists, otherwise create new bundle
+        if (bundle.head === matchBundle[1]) {
+          file.bundleGroup = index;
+        } else {
+          isBundleHead = true;
+        }
+      }
+    }
 
     // TODO: Implement parsing of entities for plaintext files
     switch (file.type) {
@@ -77,12 +108,26 @@ async function createMessages(parsedFileList) {
             messageContent = mdV2Escape(messageContent);
           }
         }
-        messageObj = new models.TgChatSendPhotoModel(
-          options.targetChatID,
+        const msgData = [
           `file://${file.path}`,
           file.captionFile ? messageContent : null,
-          parseMode
-        );
+          parseMode,
+        ];
+        if (isBundleHead) {
+          messageObj = new models.TgChatSendMediaGroupModel(
+            options.targetChatID,
+            [new inputFiles.InputMediaPhoto(...msgData)]
+          );
+        } else if (isBundleMember) {
+          bundleList[file.bundleGroup].mediaArr.push(
+            new inputFiles.InputMediaPhoto(...msgData)
+          );
+        } else {
+          messageObj = new models.TgChatSendPhotoModel(
+            options.targetChatID,
+            ...msgData
+          );
+        }
         break;
       }
       // Build object for document file
@@ -98,13 +143,27 @@ async function createMessages(parsedFileList) {
             messageContent = mdV2Escape(messageContent);
           }
         }
-        messageObj = new models.TgChatSendDocumentModel(
-          options.targetChatID,
+        const msgData = [
           `file://${file.path}`,
           file.thumbFile ? `file://${file.thumbFile.path}` : null,
           file.captionFile ? messageContent : null,
-          parseMode
-        );
+          parseMode,
+        ];
+        if (isBundleHead) {
+          messageObj = new models.TgChatSendMediaGroupModel(
+            options.targetChatID,
+            [new inputFiles.InputMediaDocument(...msgData)]
+          );
+        } else if (isBundleMember) {
+          bundleList[file.bundleGroup].mediaArr.push(
+            new inputFiles.InputMediaDocument(...msgData)
+          );
+        } else {
+          messageObj = new models.TgChatSendDocumentModel(
+            options.targetChatID,
+            ...msgData
+          );
+        }
         break;
       }
 
@@ -121,16 +180,27 @@ async function createMessages(parsedFileList) {
             messageContent = mdV2Escape(messageContent);
           }
         }
-        messageObj = new models.TgChatSendVideoModel(
-          options.targetChatID,
+        const msgData = [
           `file://${file.path}`,
-          null,
-          null,
-          null,
           file.thumbFile ? `file://${file.thumbFile.path}` : null,
           file.captionFile ? messageContent : null,
-          parseMode
-        );
+          parseMode,
+        ];
+        if (isBundleHead) {
+          messageObj = new models.TgChatSendMediaGroupModel(
+            options.targetChatID,
+            [new inputFiles.InputMediaVideo(...msgData)]
+          );
+        } else if (isBundleMember) {
+          bundleList[file.bundleGroup].mediaArr.push(
+            new inputFiles.InputMediaVideo(...msgData)
+          );
+        } else {
+          messageObj = new models.TgChatSendVideoModel(
+            options.targetChatID,
+            ...msgData
+          );
+        }
         break;
       }
 
@@ -147,16 +217,29 @@ async function createMessages(parsedFileList) {
             messageContent = mdV2Escape(messageContent);
           }
         }
-        messageObj = new models.TgChatSendAnimationModel(
-          options.targetChatID,
+        const msgData = [
           `file://${file.path}`,
-          null,
-          null,
-          null,
           file.thumbFile ? `file://${file.thumbFile.path}` : null,
           file.captionFile ? messageContent : null,
-          parseMode
-        );
+          parseMode,
+        ];
+
+        if (isBundleHead) {
+          messageObj = new models.TgChatSendMediaGroupModel(
+            options.targetChatID,
+            [new inputFiles.InputMediaAnimation(...msgData)]
+          );
+        } else if (isBundleMember) {
+          bundleList[file.bundleGroup].mediaArr.push(
+            new inputFiles.InputMediaAnimation(...msgData)
+          );
+        } else {
+          messageObj = new models.TgChatSendAnimationModel(
+            options.targetChatID,
+            ...msgData
+          );
+        }
+
         break;
       }
     }
