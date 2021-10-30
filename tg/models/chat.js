@@ -197,6 +197,62 @@ class TgChatSendPhotoModel extends TgChatSendMediaModel {
     this.photo = photo;
   }
 }
+
+/**
+ * Defines an object for sending a single audio file
+ * @extends TgChatSendMediaModel
+ */
+class TgChatSendAudioModel extends TgChatSendMediaModel {
+  /**
+   *
+   * @param {(string|number)} chatID - Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+   * @param {(FsReadStream|string)} audio - Audio file to send. Pass a file_id as String to send an audio file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get an audio file from the Internet, or upload a new one using multipart/form-data.
+   * @param {(FsReadStream|string)} [thumb] - (Optional) Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>.
+   * @param {string} [caption] - (Optional) Audio caption, 0-1024 characters after entities parsing
+   * @param {ParseMode} [parseMode] - (Optional) Mode for parsing entities in the message text
+   * @param {Array<MessageEntity>} [captionEntities] - (Optional) A JSON-serialized list of special entities that appear in message text, which can be specified instead of parse_mode
+   * @param {number} [duration] - (Optional) Duration of the audio in seconds
+   * @param {string} [performer] - (Optional) Performer
+   * @param {string} [title] - (Optional) Track name
+   * @param {boolean} [disableNotification] - (Optional) Sends the message silently. Users will receive a notification with no sound.
+   * @param {number} [replyToMessageID] - (Optional) If the message is a reply, ID of the original message
+   * @param {boolean} [allowSendingWithoutReply] - (Optional) Pass True, if the message should be sent even if the specified replied-to message is not found
+   * @param {Array} [replyMarkup] - (Optional) - Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
+   */
+  constructor(
+    chatID,
+    audio,
+    thumb,
+    caption,
+    parseMode,
+    captionEntities,
+    duration,
+    performer,
+    title,
+    disableNotification,
+    replyToMessageID,
+    allowSendingWithoutReply,
+    replyMarkup
+  ) {
+    super(
+      chatID,
+      caption,
+      parseMode,
+      captionEntities,
+      disableNotification,
+      replyToMessageID,
+      allowSendingWithoutReply,
+      replyMarkup
+    );
+    this.route = "/sendAudio";
+    this.audio = audio;
+    if (thumb != null) this.thumb = thumb;
+    if (duration != null) this.duration = duration;
+    if (performer != null) this.performer = performer;
+    if (title != null) this.title = title;
+  }
+}
+
 /**
  * Sends a document file
  * @extends TgChatSendMediaModel
@@ -396,6 +452,7 @@ class TgChatSendMediaGroupModel extends TgChatSendMediaModel {
 module.exports = {
   TgChatSendMessageModel,
   TgChatSendPhotoModel,
+  TgChatSendAudioModel,
   TgChatSendDocumentModel,
   TgChatSendVideoModel,
   TgChatSendAnimationModel,

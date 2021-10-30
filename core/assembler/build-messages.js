@@ -138,6 +138,35 @@ async function createMessages(parsedFileList) {
         }
         break;
       }
+
+      // Build object for audio file
+      case types.TYPE_MEDIA_AUDIO: {
+        if (isBundleHead) {
+          messageObj = new models.TgChatSendMediaGroupModel(
+            options.targetChatID,
+            [
+              new inputFiles.InputMediaAudio(
+                file.bundleMemberIndex,
+                ...msgData
+              ),
+            ]
+          );
+        } else if (isBundleMember) {
+          bundleList[file.bundleGroup].data.media.push(
+            new inputFiles.InputMediaAudio(
+              file.bundleMemberIndex,
+              ...msgData
+            )
+          );
+        } else {
+          messageObj = new models.TgChatSendAudioModel(
+            options.targetChatID,
+            ...msgData
+          );
+        }
+        break;
+      }
+
       // Build object for document file
       case types.TYPE_MEDIA_DOC: {
         if (isBundleHead) {
