@@ -74,6 +74,7 @@ async function createMessages(parsedFileList) {
           file.bundleGroup = index;
         } else {
           isBundleHead = true;
+          file.bundleMembers = [];
         }
       }
     }
@@ -243,10 +244,22 @@ async function createMessages(parsedFileList) {
         break;
       }
     }
-    // Append message object to file object
-    const fileObj = { ...file, data: messageObj };
-    // Push message to send queue
-    msgList.push(fileObj);
+    if (isBundleMember && !isBundleHead) {
+      // If bundle member, append self to bundle head object
+      bundleList[file.bundleGroup].bundleMembers.push({ ...file });
+    } else {
+      // Append message object to file object
+      const fileObj = { ...file, data: messageObj };
+      // Push message to send queue
+      msgList.push(fileObj);
+      if (isBundleHead) {
+        file.bundleMembers.push(fileObj);
+        bundleList.push(fileObj);
+      }
+    }
+  }
+  for (msg of bundleList) {
+    msg.data.mediaArr.sort((a, b) => a.bundleMemberIndex - b.bundleMemberIndex);
   }
   return msgList;
 }
