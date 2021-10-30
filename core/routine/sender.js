@@ -12,7 +12,7 @@ async function sendJob() {
     await send(msg.data);
     addToExclude(msg);
     await new Promise(res => {
-      setTimeout(res, 5000);
+      setTimeout(res, 30000);
     });
   }
   deleteN(list.length);
