@@ -30,7 +30,25 @@ function pullExclude() {
 }
 
 function getNamesInQueue() {
-  return queue.map(el => el.name);
+  const names = [];
+
+  // Grab name for message file, bundle members,
+  // thumb and caption files
+  for (const msg of queue) {
+    if (msg.bundleMembers) {
+      for (const bMember of msg.bundleMembers) {
+        names.push(bMember.name);
+        if (bMember.thumbFile) names.push(bMember.thumbFile.name);
+        if (bMember.captionFile) names.push(bMember.captionFile);
+      }
+      continue;
+    }
+
+    names.push(msg.name);
+    if (msg.thumbFile) names.push(msg.thumbFile);
+    if (msg.captionFile) names.push(msg.captionFile);
+  }
+  return names;
 }
 
 module.exports = {
