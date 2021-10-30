@@ -21,6 +21,19 @@ async function moveSentFiles(fileList) {
   }
   const promises = [];
   for (file of fileList) {
+    if (file.bundleMembers) {
+      for (bundleMember of file.bundleMembers) {
+        promises.push(moveFile(bundleMember.path));
+        if (bundleMember.thumbFile) {
+          promises.push(moveFile(bundleMember.thumbFile.path));
+        }
+        if (bundleMember.captionFile) {
+          promises.push(moveFile(bundleMember.captionFile.path));
+        }
+      }
+      continue;
+    }
+
     promises.push(moveFile(file.path));
     if (file.thumbFile) {
       promises.push(moveFile(file.thumbFile.path));
