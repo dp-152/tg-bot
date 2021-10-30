@@ -64,19 +64,20 @@ async function createMessages(parsedFileList) {
     if (matchBundle) {
       // Always a bundle member if the file matches the pattern
       isBundleMember = true;
-      // Elect head by base name and tenths of index (groups 1 and 2)
+      isBundleHead = true;
+      // Define head name by base name and tenths of index (match groups 1 and 2)
       file.bundleName = matchBundle[1] + "_" + matchBundle[2];
-      // Individual index set by last index digit (group 3)
+      // Member index set by last index digit (match group 3)
       file.bundleMemberIndex = +matchBundle[3];
       for ([index, bundle] of bundleList.entries()) {
         // Check if bundle already exists, otherwise create new bundle
-        if (bundle.head === matchBundle[1]) {
+        if (bundle.bundleName === file.bundleName) {
+          isBundleHead = false;
           file.bundleGroup = index;
-        } else {
-          isBundleHead = true;
-          file.bundleMembers = [];
+          break;
         }
       }
+      if (isBundleHead) file.bundleMembers = [];
     }
 
     // TODO: Implement parsing of entities for plaintext files
@@ -120,7 +121,7 @@ async function createMessages(parsedFileList) {
             [new inputFiles.InputMediaPhoto(...msgData)]
           );
         } else if (isBundleMember) {
-          bundleList[file.bundleGroup].mediaArr.push(
+          bundleList[file.bundleGroup].data.media.push(
             new inputFiles.InputMediaPhoto(...msgData)
           );
         } else {
@@ -156,7 +157,7 @@ async function createMessages(parsedFileList) {
             [new inputFiles.InputMediaDocument(...msgData)]
           );
         } else if (isBundleMember) {
-          bundleList[file.bundleGroup].mediaArr.push(
+          bundleList[file.bundleGroup].data.media.push(
             new inputFiles.InputMediaDocument(...msgData)
           );
         } else {
@@ -193,7 +194,7 @@ async function createMessages(parsedFileList) {
             [new inputFiles.InputMediaVideo(...msgData)]
           );
         } else if (isBundleMember) {
-          bundleList[file.bundleGroup].mediaArr.push(
+          bundleList[file.bundleGroup].data.media.push(
             new inputFiles.InputMediaVideo(...msgData)
           );
         } else {
@@ -231,7 +232,7 @@ async function createMessages(parsedFileList) {
             [new inputFiles.InputMediaAnimation(...msgData)]
           );
         } else if (isBundleMember) {
-          bundleList[file.bundleGroup].mediaArr.push(
+          bundleList[file.bundleGroup].data.media.push(
             new inputFiles.InputMediaAnimation(...msgData)
           );
         } else {
@@ -253,13 +254,13 @@ async function createMessages(parsedFileList) {
       // Push message to send queue
       msgList.push(fileObj);
       if (isBundleHead) {
-        file.bundleMembers.push(fileObj);
+        fileObj.bundleMembers.push(fileObj);
         bundleList.push(fileObj);
       }
     }
   }
   for (msg of bundleList) {
-    msg.data.mediaArr.sort((a, b) => a.bundleMemberIndex - b.bundleMemberIndex);
+    msg.data.media.sort((a, b) => a.bundleMemberIndex - b.bundleMemberIndex);
   }
   return msgList;
 }
