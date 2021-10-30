@@ -118,11 +118,11 @@ async function createMessages(parsedFileList) {
         if (isBundleHead) {
           messageObj = new models.TgChatSendMediaGroupModel(
             options.targetChatID,
-            [new inputFiles.InputMediaPhoto(...msgData)]
+            [new inputFiles.InputMediaPhoto(file.bundleMemberIndex, ...msgData)]
           );
         } else if (isBundleMember) {
           bundleList[file.bundleGroup].data.media.push(
-            new inputFiles.InputMediaPhoto(...msgData)
+            new inputFiles.InputMediaPhoto(file.bundleMemberIndex, ...msgData)
           );
         } else {
           messageObj = new models.TgChatSendPhotoModel(
@@ -154,11 +154,19 @@ async function createMessages(parsedFileList) {
         if (isBundleHead) {
           messageObj = new models.TgChatSendMediaGroupModel(
             options.targetChatID,
-            [new inputFiles.InputMediaDocument(...msgData)]
+            [
+              new inputFiles.InputMediaDocument(
+                file.bundleMemberIndex,
+                ...msgData
+              ),
+            ]
           );
         } else if (isBundleMember) {
           bundleList[file.bundleGroup].data.media.push(
-            new inputFiles.InputMediaDocument(...msgData)
+            new inputFiles.InputMediaDocument(
+              file.bundleMemberIndex,
+              ...msgData
+            )
           );
         } else {
           messageObj = new models.TgChatSendDocumentModel(
@@ -191,11 +199,11 @@ async function createMessages(parsedFileList) {
         if (isBundleHead) {
           messageObj = new models.TgChatSendMediaGroupModel(
             options.targetChatID,
-            [new inputFiles.InputMediaVideo(...msgData)]
+            [new inputFiles.InputMediaVideo(file.bundleMemberIndex, ...msgData)]
           );
         } else if (isBundleMember) {
           bundleList[file.bundleGroup].data.media.push(
-            new inputFiles.InputMediaVideo(...msgData)
+            new inputFiles.InputMediaVideo(file.bundleMemberIndex, ...msgData)
           );
         } else {
           messageObj = new models.TgChatSendVideoModel(
@@ -229,11 +237,19 @@ async function createMessages(parsedFileList) {
         if (isBundleHead) {
           messageObj = new models.TgChatSendMediaGroupModel(
             options.targetChatID,
-            [new inputFiles.InputMediaAnimation(...msgData)]
+            [
+              new inputFiles.InputMediaAnimation(
+                file.bundleMemberIndex,
+                ...msgData
+              ),
+            ]
           );
         } else if (isBundleMember) {
           bundleList[file.bundleGroup].data.media.push(
-            new inputFiles.InputMediaAnimation(...msgData)
+            new inputFiles.InputMediaAnimation(
+              file.bundleMemberIndex,
+              ...msgData
+            )
           );
         } else {
           messageObj = new models.TgChatSendAnimationModel(
@@ -260,7 +276,7 @@ async function createMessages(parsedFileList) {
     }
   }
   for (msg of bundleList) {
-    msg.data.media.sort((a, b) => a.bundleMemberIndex - b.bundleMemberIndex);
+    msg.data.media.sort((a, b) => a.mediaIdx - b.mediaIdx);
   }
   return msgList;
 }
