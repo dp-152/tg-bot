@@ -9,8 +9,25 @@ async function sendJob() {
     console.log(`Sending message from file ${msg.name}`);
     console.log(`- Has thumb: ${!!msg.thumbFile}`);
     console.log(`- Has caption: ${!!msg.captionFile}\n`);
-
-    await send(msg.data);
+    try {
+      await send(msg.data);
+    } catch (err) {
+      console.log("Message send failed with the following error:");
+      console.log(err.response.data);
+      if (err.response.status === 429) {
+        console.log("API responded with too many requests error.");
+        console.log("Will wait for 30 seconds and then try again");
+        await new Promise(res => {
+          setTimeout(res, 30 * 1000);
+        });
+        try {
+          await send(msg.data);
+        } catch (err) {
+          console.log("Sending message has failed again.");
+          console.log(err.response.data);
+        }
+      }
+    }
     addToExclude(msg);
 
     let timeout;
