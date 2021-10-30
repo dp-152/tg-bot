@@ -80,7 +80,24 @@ async function createMessages(parsedFileList) {
       if (isBundleHead) file.bundleMembers = [];
     }
 
-    // TODO: Implement parsing of entities for plaintext files
+    let parseMode;
+    let messageContent;
+    if (file.captionFile) {
+      parseMode = getParseMode(file.captionFile);
+      messageContent = (
+        await fs.readFile(file.captionFile.path)
+      ).toString();
+      if (parseMode === "MarkdownV2") {
+        messageContent = mdV2Escape(messageContent);
+      }
+    }
+    const msgData = [
+      `file://${file.path}`,
+      file.thumbFile ? `file://${file.thumbFile.path}` : null,
+      file.captionFile ? messageContent : null,
+      parseMode,
+    ];
+
     switch (file.type) {
       // Build object for text message
       case types.TYPE_MEDIA_TEXT: {
@@ -99,17 +116,6 @@ async function createMessages(parsedFileList) {
 
       // Build object for image file
       case types.TYPE_MEDIA_IMAGE: {
-        let parseMode;
-        let messageContent;
-        if (file.captionFile) {
-          parseMode = getParseMode(file.captionFile);
-          messageContent = (
-            await fs.readFile(file.captionFile.path)
-          ).toString();
-          if (parseMode === "MarkdownV2") {
-            messageContent = mdV2Escape(messageContent);
-          }
-        }
         const msgData = [
           `file://${file.path}`,
           file.captionFile ? messageContent : null,
@@ -134,23 +140,6 @@ async function createMessages(parsedFileList) {
       }
       // Build object for document file
       case types.TYPE_MEDIA_DOC: {
-        let parseMode;
-        let messageContent;
-        if (file.captionFile) {
-          parseMode = getParseMode(file.captionFile);
-          messageContent = (
-            await fs.readFile(file.captionFile.path)
-          ).toString();
-          if (parseMode === "MarkdownV2") {
-            messageContent = mdV2Escape(messageContent);
-          }
-        }
-        const msgData = [
-          `file://${file.path}`,
-          file.thumbFile ? `file://${file.thumbFile.path}` : null,
-          file.captionFile ? messageContent : null,
-          parseMode,
-        ];
         if (isBundleHead) {
           messageObj = new models.TgChatSendMediaGroupModel(
             options.targetChatID,
@@ -179,23 +168,6 @@ async function createMessages(parsedFileList) {
 
       // Build object for video file
       case types.TYPE_MEDIA_VIDEO: {
-        let parseMode;
-        let messageContent;
-        if (file.captionFile) {
-          parseMode = getParseMode(file.captionFile);
-          messageContent = (
-            await fs.readFile(file.captionFile.path)
-          ).toString();
-          if (parseMode === "MarkdownV2") {
-            messageContent = mdV2Escape(messageContent);
-          }
-        }
-        const msgData = [
-          `file://${file.path}`,
-          file.thumbFile ? `file://${file.thumbFile.path}` : null,
-          file.captionFile ? messageContent : null,
-          parseMode,
-        ];
         if (isBundleHead) {
           messageObj = new models.TgChatSendMediaGroupModel(
             options.targetChatID,
@@ -216,24 +188,6 @@ async function createMessages(parsedFileList) {
 
       // Build object for animation file
       case types.TYPE_MEDIA_ANIM: {
-        let parseMode;
-        let messageContent;
-        if (file.captionFile) {
-          parseMode = getParseMode(file.captionFile);
-          messageContent = (
-            await fs.readFile(file.captionFile.path)
-          ).toString();
-          if (parseMode === "MarkdownV2") {
-            messageContent = mdV2Escape(messageContent);
-          }
-        }
-        const msgData = [
-          `file://${file.path}`,
-          file.thumbFile ? `file://${file.thumbFile.path}` : null,
-          file.captionFile ? messageContent : null,
-          parseMode,
-        ];
-
         if (isBundleHead) {
           messageObj = new models.TgChatSendMediaGroupModel(
             options.targetChatID,
@@ -261,6 +215,7 @@ async function createMessages(parsedFileList) {
         break;
       }
     }
+
     if (isBundleMember && !isBundleHead) {
       // If bundle member, append self to bundle head object
       bundleList[file.bundleGroup].bundleMembers.push({ ...file });
