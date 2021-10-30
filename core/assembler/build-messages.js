@@ -69,7 +69,7 @@ async function createMessages(parsedFileList) {
       file.bundleName = matchBundle[1] + "_" + matchBundle[2];
       // Member index set by last index digit (match group 3)
       file.bundleMemberIndex = +matchBundle[3];
-      for ([index, bundle] of bundleList.entries()) {
+      for (const [index, bundle] of bundleList.entries()) {
         // Check if bundle already exists, otherwise create new bundle
         if (bundle.bundleName === file.bundleName) {
           isBundleHead = false;
@@ -275,7 +275,7 @@ async function createMessages(parsedFileList) {
       }
     }
   }
-  for (msg of bundleList) {
+  for (const msg of bundleList) {
     msg.data.media.sort((a, b) => a.mediaIdx - b.mediaIdx);
   }
   return msgList;

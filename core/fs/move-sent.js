@@ -20,9 +20,9 @@ async function moveSentFiles(fileList) {
     if (err.code !== "EEXIST") throw err;
   }
   const promises = [];
-  for (file of fileList) {
+  for (const file of fileList) {
     if (file.bundleMembers) {
-      for (bundleMember of file.bundleMembers) {
+      for (const bundleMember of file.bundleMembers) {
         promises.push(moveFile(bundleMember.path));
         if (bundleMember.thumbFile) {
           promises.push(moveFile(bundleMember.thumbFile.path));

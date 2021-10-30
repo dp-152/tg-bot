@@ -5,7 +5,7 @@ const { send } = require("../../tg/interface/send");
 
 async function sendJob() {
   const list = pullN(options.sendAtOnce);
-  for (msg of list) {
+  for (const msg of list) {
     console.log(`Sending message from file ${msg.name}`);
     console.log(`- Has thumb: ${!!msg.thumbFile}`);
     console.log(`- Has caption: ${!!msg.captionFile}\n`);
