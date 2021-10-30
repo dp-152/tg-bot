@@ -1,8 +1,8 @@
 const { options } = require("../../util/config");
 const { parseFileList } = require("../assembler/parse-files");
 const { createMessages } = require("../assembler/build-messages");
-const { addToQueue, getNamesInQueue } = require("../queue/queue");
-const { moveSent } = require("./sent-cleanup");
+const { addToQueue, getNamesInQueue, pullExclude } = require("../queue/queue");
+const { moveSentFiles } = require("../fs/move-sent");
 const {
   fetchDirContent,
   getFileMeta,
@@ -41,7 +41,8 @@ async function fillQueue() {
 async function initFillQueue() {
   await fillQueue();
   setInterval(async () => {
-    await moveSent();
+    const excludedFiles = pullExclude();
+    await moveSentFiles(excludedFiles);
     fillQueue();
   }, (options.sendEvery / 2) * 60 * 1000);
 }
