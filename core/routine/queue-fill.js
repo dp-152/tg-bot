@@ -13,22 +13,15 @@ function removeInQueue(inputList) {
   const outputList = [];
   const qFileNames = getNamesInQueue();
 
-  for (let i = 0; i < inputList.length; i++) {
-    if (
-      inputList[i].match(/^.*\.[a-zA-Z0-9]+_(caption|thumb)\.[a-zA-Z0-9]+$/g)
-    ) {
-      outputList.push(inputList[i]);
-      continue;
-    }
-
+  for (const iName of inputList) {
     let match = false;
-    for (let j = 0; j < qFileNames.length; j++) {
-      if (inputList[i] === qFileNames[j]) {
+    for (const qName of qFileNames) {
+      if (iName === qName) {
         match = true;
         break;
       }
     }
-    if (!match) outputList.push(inputList[i]);
+    if (!match) outputList.push(iName);
   }
 
   return outputList;
