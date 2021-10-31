@@ -4,11 +4,21 @@ const { pullN, deleteN, addToExclude } = require("../queue/queue");
 const { send } = require("../../tg/interface/send");
 
 async function sendJob() {
-  const list = pullN(options.sendAtOnce);
+  let list = pullN(options.sendAtOnce);
+  let waitCount = 0;
+  while (!list) {
+    console.log("Queue locked! Waiting 15 seconds");
+    console.log(`My thread has waited ${waitCount} ticks for a release`);
+    list = pullN(options.sendAtOnce);
+    waitCount++;
+    await new Promise(res => {
+      setTimeout(res, 15000);
+    });
+  }
   for (const msg of list) {
     console.log(`Sending message from file ${msg.name}`);
     console.log(`- Has thumb: ${!!msg.thumbFile}`);
-    console.log(`- Has caption: ${!!msg.captionFile}\n`);
+    console.log(`- Has caption: ${!!msg.captionFile}`);
     try {
       await send(msg.data);
     } catch (err) {

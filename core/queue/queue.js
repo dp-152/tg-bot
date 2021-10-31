@@ -1,6 +1,8 @@
 const queue = [];
 const exclude = [];
 
+let qLock = false;
+
 function addToQueue(messages) {
   console.log(`Appending ${messages.length} messages to queue...`);
   queue.push(...messages);
@@ -13,6 +15,9 @@ function addToExclude(message) {
 }
 
 function pullN(n) {
+  if (qLock) return false;
+  qLock = true;
+  console.log("Queue lock set");
   const slice = queue.slice(0, n);
   console.log(`Just sliced the queue. Gathered ${slice.length} elements`);
   return slice;
@@ -22,6 +27,8 @@ function deleteN(n) {
   console.log(`Deleting ${n} elements from the top of the queue`);
   queue.splice(0, n);
   console.log(`Current queue size: ${queue.length}`);
+  qLock = false;
+  console.log("Queue lock released");
 }
 
 function pullExclude() {
