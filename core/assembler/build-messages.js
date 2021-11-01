@@ -1,4 +1,4 @@
-const fs = require("fs/promises");
+const fs = require("fs");
 
 const models = require("../../tg/models/chat");
 const inputFiles = require("../../tg/models/input");
@@ -34,6 +34,7 @@ function getParseMode(file) {
  * @return {string} Input string with illegal characters escaped
  */
 function mdV2Escape(contents) {
+  // TODO: Improve recognition and escaping of illegal characters (context-aware)
   return contents.replace(/([^\\])(>|#|\+|-|=|\||{|}|\.|!)/g, "$1\\$2");
 }
 
@@ -85,23 +86,34 @@ async function createMessages(parsedFileList) {
     if (file.captionFile) {
       parseMode = getParseMode(file.captionFile);
       messageContent = (
-        await fs.readFile(file.captionFile.path)
+        await fs.promises.readFile(file.captionFile.path)
       ).toString();
       if (parseMode === "MarkdownV2") {
         messageContent = mdV2Escape(messageContent);
       }
     }
-    const msgData = [
-      `file://${file.path}`,
-      file.thumbFile ? `file://${file.thumbFile.path}` : null,
-      file.captionFile ? messageContent : null,
-      parseMode,
-    ];
+    let msgData;
+
+    if (options.handleFiles === "remote") {
+      msgData = [
+        `file://${file.path}`,
+        file.thumbFile ? `file://${file.thumbFile.path}` : null,
+        file.captionFile ? messageContent : null,
+        parseMode,
+      ];
+    } else if (options.handleFiles === "local") {
+      msgData = [
+        `attach://${file.name}`,
+        file.thumbFile && `attach://${file.thumbFile.path}`,
+        file.captionFile && messageContent,
+        parseMode,
+      ];
+    }
 
     switch (file.type) {
       // Build object for text message
       case types.TYPE_MEDIA_TEXT: {
-        let messageContent = (await fs.readFile(file.path)).toString();
+        let messageContent = (await fs.promises.readFile(file.path)).toString();
         const parseMode = getParseMode(file);
         if (parseMode === "MarkdownV2") {
           messageContent = mdV2Escape(messageContent);
@@ -140,19 +152,11 @@ async function createMessages(parsedFileList) {
         if (isBundleHead) {
           messageObj = new models.TgChatSendMediaGroupModel(
             options.targetChatID,
-            [
-              new inputFiles.InputMediaAudio(
-                file.bundleMemberIndex,
-                ...msgData
-              ),
-            ]
+            [new inputFiles.InputMediaAudio(file.bundleMemberIndex, ...msgData)]
           );
         } else if (isBundleMember) {
           bundleList[file.bundleGroup].data.media.push(
-            new inputFiles.InputMediaAudio(
-              file.bundleMemberIndex,
-              ...msgData
-            )
+            new inputFiles.InputMediaAudio(file.bundleMemberIndex, ...msgData)
           );
         } else {
           messageObj = new models.TgChatSendAudioModel(
@@ -242,9 +246,26 @@ async function createMessages(parsedFileList) {
     }
 
     if (isBundleMember && !isBundleHead) {
+      if (options.handleFiles === "local") {
+        bundleList[file.bundleGroup].data[file.name] = fs.createReadStream(
+          file.path
+        );
+        if (file.thumbFile) {
+          bundleList[file.bundleGroup][file.thumbFile.name] =
+            fs.createReadStream(file.thumbfile.path);
+        }
+      }
       // If bundle member, append self to bundle head object
       bundleList[file.bundleGroup].bundleMembers.push({ ...file });
     } else {
+      if (options.handleFiles === "local") {
+        messageObj[file.name] = fs.createReadStream(file.path);
+        if (file.thumbFile) {
+          messageObj[file.thumbFile.name] = fs.createReadStream(
+            file.thumbFile.path
+          );
+        }
+      }
       // Append message object to file object
       const fileObj = { ...file, data: messageObj };
       // Push message to send queue
