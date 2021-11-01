@@ -116,11 +116,7 @@ async function createMessages(parsedFileList) {
 
       // Build object for image file
       case types.TYPE_MEDIA_IMAGE: {
-        const msgData = [
-          `file://${file.path}`,
-          file.captionFile ? messageContent : null,
-          parseMode,
-        ];
+        msgData.splice(1, 1);
         if (isBundleHead) {
           messageObj = new models.TgChatSendMediaGroupModel(
             options.targetChatID,
