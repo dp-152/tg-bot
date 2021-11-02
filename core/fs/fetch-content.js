@@ -18,7 +18,7 @@ async function getFileMeta(rootPath, fileNamesList) {
       // Grab the absolute file path
       const fPath = path.resolve(rootPath, fName);
       // Grab the file extension
-      const fExt = path.extname(fName);
+      const fExt = path.extname(fName).toLowerCase();
 
       fileList.push({
         name: fName,
