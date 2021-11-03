@@ -1,7 +1,7 @@
 const { options } = require("../../util/config");
 const { parseFileList } = require("../assembler/parse-files");
 const { createMessages } = require("../assembler/build-messages");
-const { addToQueue, getNamesInQueue, pullExclude } = require("../queue/queue");
+const { addToQueue, getQueueFiles, pullExclude } = require("../queue/queue");
 const { moveSentFiles } = require("../fs/move-sent");
 const {
   fetchDirContent,
@@ -9,13 +9,12 @@ const {
   sortFilesByDate,
 } = require("../fs/fetch-content");
 
-function removeInQueue(inputList) {
+function filterNewFiles(fileList, queueList) {
   const outputList = [];
-  const qFileNames = getNamesInQueue();
 
-  for (const iName of inputList) {
+  for (const iName of fileList) {
     let match = false;
-    for (const qName of qFileNames) {
+    for (const qName of queueList) {
       if (iName === qName) {
         match = true;
         break;
@@ -29,13 +28,13 @@ function removeInQueue(inputList) {
 
 async function fillQueue() {
   console.log("Will begin seeking new files from the file system");
-  const fileNamesList = await fetchDirContent(options.loadPath);
-  const cleanFlNmList = removeInQueue(fileNamesList);
-  const sortedFlList = sortFilesByDate(
-    await getFileMeta(options.loadPath, cleanFlNmList),
-  );
-  const appendList = await createMessages(parseFileList(sortedFlList));
-  addToQueue(appendList);
+  const queueFilesList = getQueueFiles();
+  const dirFilesList = await fetchDirContent(options.loadPath);
+  const newFilesList = filterNewFiles(dirFilesList, queueFilesList);
+  const fileMetaList = await getFileMeta(newFilesList);
+  const sortedFlList = sortFilesByDate(fileMetaList);
+  const messagesList = await createMessages(parseFileList(sortedFlList));
+  addToQueue(messagesList);
 }
 
 async function initFillQueue() {
