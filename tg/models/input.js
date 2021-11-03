@@ -71,6 +71,7 @@ class InputMediaPhoto extends InputMedia {
 
 /**
  * Model for video input
+ *
  * @extends InputMedia
  */
 class InputMediaVideo extends InputMedia {
@@ -117,6 +118,7 @@ class InputMediaVideo extends InputMedia {
 
 /**
  * Model for animation input (GIF, MP4 without audio)
+ *
  * @extends InputMediaVideo
  */
 class InputMediaAnimation extends InputMediaVideo {
@@ -161,7 +163,8 @@ class InputMediaAnimation extends InputMediaVideo {
 
 /**
  * Model for audio input
- * @Extends InputMedia
+ *
+ * @extends InputMedia
  */
 class InputMediaAudio extends InputMedia {
   /**
@@ -204,6 +207,7 @@ class InputMediaAudio extends InputMedia {
 
 /**
  * Model for document input
+ *
  * @extends InputMedia
  */
 class InputMediaDocument extends InputMedia {

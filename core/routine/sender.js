@@ -3,6 +3,10 @@ const { initFillQueue } = require("./queue-fill");
 const { pullTopN, deleteTopN, addToExclude } = require("../queue/queue");
 const { send } = require("../../tg/interface/send");
 
+
+/**
+ * @description Executes a single send job.
+ */
 async function sendJob() {
   let list = pullTopN(options.sendAtOnce);
   let waitCount = 0;
@@ -51,6 +55,9 @@ async function sendJob() {
   deleteTopN(list.length);
 }
 
+/**
+ * @description Initializes the sender routine.
+ */
 async function initSendJob() {
   await initFillQueue();
   sendJob();

@@ -3,8 +3,9 @@ const types = require("../models/types");
 /**
  * Parses a list of files
  * Will append file extension, media type, thumbnail (if available) and caption (if available)
+ *
  * @param {Array} fileList - Array containing file list to be parsed
- * @return {Array} - File list with parsed data
+ * @returns {Array} - File list with parsed data
  */
 function parseFileList(fileList) {
   const skippedFileNames = [];

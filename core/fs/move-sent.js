@@ -3,6 +3,12 @@ const path = require("path");
 
 const { options } = require("../../util/config");
 
+/**
+ * Moves a single file to the history directory.
+ *
+ * @param {string} filePath - Path to the file to move
+ * @returns {Promise<void>} - Resolves when the file has been moved
+ */
 async function moveFile(filePath) {
   console.log(
     `Moving file ${path.basename(filePath)} to ${options.historyPath}`,
@@ -13,6 +19,11 @@ async function moveFile(filePath) {
   );
 }
 
+/**
+ * Moves all files in the given list to the history directory.
+ *
+ * @param {Array<string>} fileList - List of files to move
+ */
 async function moveSentFiles(fileList) {
   try {
     await fs.mkdir(options.historyPath);

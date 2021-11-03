@@ -8,8 +8,9 @@ const { options } = require("../../util/config");
 
 /**
  * Detects the proper parse mode for a text file
- * @param {Object} file - A file object containing a text file with parsed metadata
- * @return {string|null} - A string containing the proper parse mode for the file. Returns null if file object is empty or no parse mode is found for the file type.
+ *
+ * @param {object} file - A file object containing a text file with parsed metadata
+ * @returns {string|null} - A string containing the proper parse mode for the file. Returns null if file object is empty or no parse mode is found for the file type.
  */
 function getParseMode(file) {
   if (!file) return null;
@@ -30,19 +31,21 @@ function getParseMode(file) {
 
 /**
  * Escapes illegal characters in MarkdownV2 text
+ *
  * @param {string} contents - MarkdownV2 text
- * @return {string} Input string with illegal characters escaped
+ * @returns {string} Input string with illegal characters escaped
  */
 function mdV2Escape(contents) {
-  // TODO: Improve recognition and escaping of illegal characters
+  // @TODO: Improve recognition and escaping of illegal characters
   // (context-aware matching)
   return contents.replace(/([^\\])(>|#|\+|-|=|\||{|}|\.|!)/g, "$1\\$2");
 }
 
 /**
  * Transforms a parsed list of files into a list of ready-to-send messages
+ *
  * @param {Promise} parsedFileList - A parsed file list containing file types
- * @return {Promise} List of messages ready to be sent
+ * @returns {Promise} List of messages ready to be sent
  */
 async function createMessages(parsedFileList) {
   const msgList = [];

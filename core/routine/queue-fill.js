@@ -10,6 +10,9 @@ const {
   sortFilesByDate,
 } = require("../fs/fetch-content");
 
+/**
+ * @description Fills the queue with files from the file system
+ */
 async function fillQueue() {
   const queueFilesList = getQueueFiles();
   const dirFilesList = await fetchDirContent(options.loadPath);
@@ -21,6 +24,9 @@ async function fillQueue() {
   addToQueue(messagesList);
 }
 
+/**
+ * @description Initializes the queue fill routine
+ */
 async function initFillQueue() {
   await fillQueue();
   setInterval(async () => {

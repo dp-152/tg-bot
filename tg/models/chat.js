@@ -21,6 +21,7 @@ class TgChatModel {
 
 /**
  * Base class for send interfaces
+ *
  * @extends TgChatModel
  */
 class TgChatSendModel extends TgChatModel {
@@ -67,6 +68,7 @@ class TgChatSendModel extends TgChatModel {
 
 /**
  * Sends a text message
+ *
  * @extends TgChatSendModel
  */
 class TgChatSendMessageModel extends TgChatSendModel {
@@ -156,6 +158,7 @@ class TgChatSendMediaModel extends TgChatSendModel {
 
 /**
  * Defines an object for sending a single image file
+ *
  * @extends TgChatSendMediaModel
  */
 class TgChatSendPhotoModel extends TgChatSendMediaModel {
@@ -200,6 +203,7 @@ class TgChatSendPhotoModel extends TgChatSendMediaModel {
 
 /**
  * Defines an object for sending a single audio file
+ *
  * @extends TgChatSendMediaModel
  */
 class TgChatSendAudioModel extends TgChatSendMediaModel {
@@ -254,7 +258,8 @@ class TgChatSendAudioModel extends TgChatSendMediaModel {
 }
 
 /**
- * Sends a document file
+ * Defines an object for sending a document file
+ *
  * @extends TgChatSendMediaModel
  */
 class TgChatSendDocumentModel extends TgChatSendMediaModel {
@@ -305,6 +310,7 @@ class TgChatSendDocumentModel extends TgChatSendMediaModel {
 }
 /**
  * Sends a video file
+ *
  * @extends TgChatSendMediaModel
  */
 class TgChatSendVideoModel extends TgChatSendMediaModel {
@@ -360,6 +366,7 @@ class TgChatSendVideoModel extends TgChatSendMediaModel {
 
 /**
  * Sends an animation (GIF, MP4 without audio)
+ *
  * @extends TgChatSendVideoModel
  */
 class TgChatSendAnimationModel extends TgChatSendVideoModel {
@@ -416,6 +423,7 @@ class TgChatSendAnimationModel extends TgChatSendVideoModel {
 }
 /**
  * Sends a group of media files (2-10)
+ *
  * @extends TgChatSendMediaModel
  */
 class TgChatSendMediaGroupModel extends TgChatSendMediaModel {
