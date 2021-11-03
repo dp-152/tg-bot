@@ -2,21 +2,23 @@ const fs = require("fs/promises");
 const path = require("path");
 
 async function fetchDirContent(rootPath) {
-  const dirContent = await fs.readdir(rootPath);
+  const dirContent = (await fs.readdir(rootPath)).map(fName =>
+    path.resolve(path.join(rootPath, fName)),
+  );
   dirContent.sort();
   return dirContent;
 }
 
-async function getFileMeta(rootPath, fileNamesList) {
+async function getFileMeta(fileNamesList) {
   const fileList = [];
 
-  for (const fName of fileNamesList) {
-    const stat = await fs.stat(path.join(rootPath, fName));
+  for (const fPath of fileNamesList) {
+    const stat = await fs.stat(fPath);
 
     // Gather stat data for current file
     if (!stat.isDirectory()) {
       // Grab the absolute file path
-      const fPath = path.resolve(rootPath, fName);
+      const fName = path.basename(fPath);
       // Grab the file extension
       const fExt = path.extname(fName).toLowerCase();
 
