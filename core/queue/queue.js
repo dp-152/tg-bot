@@ -14,7 +14,7 @@ function addToExclude(message) {
   exclude.push(message);
 }
 
-function pullN(n) {
+function pullTopN(n) {
   if (qLock) return false;
   qLock = true;
   console.log("Queue lock set");
@@ -23,7 +23,7 @@ function pullN(n) {
   return slice;
 }
 
-function deleteN(n) {
+function deleteTopN(n) {
   console.log(`Deleting ${n} elements from the top of the queue`);
   queue.splice(0, n);
   console.log(`Current queue size: ${queue.length}`);
@@ -60,8 +60,8 @@ function getNamesInQueue() {
 
 module.exports = {
   addToQueue,
-  pullN,
-  deleteN,
+  pullTopN,
+  deleteTopN,
   addToExclude,
   pullExclude,
   getNamesInQueue,

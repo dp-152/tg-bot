@@ -1,15 +1,15 @@
 const { options } = require("../../util/config");
 const { initFillQueue } = require("./queue-fill");
-const { pullN, deleteN, addToExclude } = require("../queue/queue");
+const { pullTopN, deleteTopN, addToExclude } = require("../queue/queue");
 const { send } = require("../../tg/interface/send");
 
 async function sendJob() {
-  let list = pullN(options.sendAtOnce);
+  let list = pullTopN(options.sendAtOnce);
   let waitCount = 0;
   while (!list) {
     console.log("Queue locked! Waiting 15 seconds");
     console.log(`My thread has waited ${waitCount} ticks for a release`);
-    list = pullN(options.sendAtOnce);
+    list = pullTopN(options.sendAtOnce);
     waitCount++;
     await new Promise(res => {
       setTimeout(res, 15000);
@@ -48,7 +48,7 @@ async function sendJob() {
       setTimeout(res, timeout * 1000);
     });
   }
-  deleteN(list.length);
+  deleteTopN(list.length);
 }
 
 async function initSendJob() {
