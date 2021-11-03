@@ -34,7 +34,7 @@ async function getFileMeta(rootPath, fileNamesList) {
 
 function sortFilesByDate(fileList) {
   return fileList.sort(
-    (a, b) => a.stat.ctime.getTime() - b.stat.ctime.getTime()
+    (a, b) => a.stat.ctime.getTime() - b.stat.ctime.getTime(),
   );
 }
 

@@ -32,7 +32,7 @@ async function fillQueue() {
   const fileNamesList = await fetchDirContent(options.loadPath);
   const cleanFlNmList = removeInQueue(fileNamesList);
   const sortedFlList = sortFilesByDate(
-    await getFileMeta(options.loadPath, cleanFlNmList)
+    await getFileMeta(options.loadPath, cleanFlNmList),
   );
   const appendList = await createMessages(parseFileList(sortedFlList));
   addToQueue(appendList);

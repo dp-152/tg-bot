@@ -5,11 +5,11 @@ const { options } = require("../../util/config");
 
 async function moveFile(filePath) {
   console.log(
-    `Moving file ${path.basename(filePath)} to ${options.historyPath}`
+    `Moving file ${path.basename(filePath)} to ${options.historyPath}`,
   );
   return fs.rename(
     filePath,
-    path.resolve(options.historyPath, path.basename(filePath))
+    path.resolve(options.historyPath, path.basename(filePath)),
   );
 }
 

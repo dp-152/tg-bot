@@ -27,7 +27,7 @@ class User {
     languageCode,
     canJoinGroups,
     canReadAllGroupMessages,
-    supportsInlineQueries
+    supportsInlineQueries,
   ) {
     this.id = id;
     this.is_bot = isBot;

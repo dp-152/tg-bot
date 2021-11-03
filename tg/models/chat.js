@@ -45,7 +45,7 @@ class TgChatSendModel extends TgChatModel {
     disableNotification,
     replyToMessageID,
     allowSendingWithoutReply,
-    replyMarkup
+    replyMarkup,
   ) {
     super(chatID);
     if (text != null) this.text = text;
@@ -91,7 +91,7 @@ class TgChatSendMessageModel extends TgChatSendModel {
     disableNotification,
     replyToMessageID,
     allowSendingWithoutReply,
-    replyMarkup
+    replyMarkup,
   ) {
     super(
       chatID,
@@ -102,7 +102,7 @@ class TgChatSendMessageModel extends TgChatSendModel {
       disableNotification,
       replyToMessageID,
       allowSendingWithoutReply,
-      replyMarkup
+      replyMarkup,
     );
     this.route = "/sendMessage";
   }
@@ -131,7 +131,7 @@ class TgChatSendMediaModel extends TgChatSendModel {
     disableNotification,
     replyToMessageID,
     allowSendingWithoutReply,
-    replyMarkup
+    replyMarkup,
   ) {
     /**
      * Text -> Caption
@@ -147,7 +147,7 @@ class TgChatSendMediaModel extends TgChatSendModel {
       disableNotification,
       replyToMessageID,
       allowSendingWithoutReply,
-      replyMarkup
+      replyMarkup,
     );
     if (caption != null) this.caption = caption;
     if (captionEntities != null) this.captionEntities = captionEntities;
@@ -180,7 +180,7 @@ class TgChatSendPhotoModel extends TgChatSendMediaModel {
     disableNotification,
     replyToMessageID,
     allowSendingWithoutReply,
-    replyMarkup
+    replyMarkup,
   ) {
     super(
       chatID,
@@ -190,7 +190,7 @@ class TgChatSendPhotoModel extends TgChatSendMediaModel {
       disableNotification,
       replyToMessageID,
       allowSendingWithoutReply,
-      replyMarkup
+      replyMarkup,
     );
 
     this.route = "/sendPhoto";
@@ -232,7 +232,7 @@ class TgChatSendAudioModel extends TgChatSendMediaModel {
     disableNotification,
     replyToMessageID,
     allowSendingWithoutReply,
-    replyMarkup
+    replyMarkup,
   ) {
     super(
       chatID,
@@ -242,7 +242,7 @@ class TgChatSendAudioModel extends TgChatSendMediaModel {
       disableNotification,
       replyToMessageID,
       allowSendingWithoutReply,
-      replyMarkup
+      replyMarkup,
     );
     this.route = "/sendAudio";
     this.audio = audio;
@@ -283,7 +283,7 @@ class TgChatSendDocumentModel extends TgChatSendMediaModel {
     disableNotification,
     replyToMessageID,
     allowSendingWithoutReply,
-    replyMarkup
+    replyMarkup,
   ) {
     super(
       chatID,
@@ -293,7 +293,7 @@ class TgChatSendDocumentModel extends TgChatSendMediaModel {
       disableNotification,
       replyToMessageID,
       allowSendingWithoutReply,
-      replyMarkup
+      replyMarkup,
     );
     this.route = "/sendDocument";
     this.document = document;
@@ -337,7 +337,7 @@ class TgChatSendVideoModel extends TgChatSendMediaModel {
     disableNotification,
     replyToMessageID,
     allowSendingWithoutReply,
-    replyMarkup
+    replyMarkup,
   ) {
     super(
       chatID,
@@ -347,7 +347,7 @@ class TgChatSendVideoModel extends TgChatSendMediaModel {
       disableNotification,
       replyToMessageID,
       allowSendingWithoutReply,
-      replyMarkup
+      replyMarkup,
     );
     this.route = "/sendVideo";
     this.video = video;
@@ -392,7 +392,7 @@ class TgChatSendAnimationModel extends TgChatSendVideoModel {
     disableNotification,
     replyToMessageID,
     allowSendingWithoutReply,
-    replyMarkup
+    replyMarkup,
   ) {
     super(
       chatID,
@@ -407,7 +407,7 @@ class TgChatSendAnimationModel extends TgChatSendVideoModel {
       disableNotification,
       replyToMessageID,
       allowSendingWithoutReply,
-      replyMarkup
+      replyMarkup,
     );
     delete this.video;
     this.route = "/sendAnimation";
@@ -432,7 +432,7 @@ class TgChatSendMediaGroupModel extends TgChatSendMediaModel {
     mediaArr,
     disableNotification,
     replyToMessageID,
-    allowSendingWithoutReply
+    allowSendingWithoutReply,
   ) {
     super(
       chatID,
@@ -442,7 +442,7 @@ class TgChatSendMediaGroupModel extends TgChatSendMediaModel {
       disableNotification,
       replyToMessageID,
       allowSendingWithoutReply,
-      null
+      null,
     );
     this.route = "/sendMediaGroup";
     this.media = mediaArr;

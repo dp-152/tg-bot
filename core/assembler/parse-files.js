@@ -12,9 +12,7 @@ function parseFileList(fileList) {
 
   fileList.forEach(currFile => {
     // Find if file extension is known
-    fileType = types.knownMedias.find(
-      el => el.exts.indexOf(currFile.ext) >= 0
-    );
+    fileType = types.knownMedias.find(el => el.exts.indexOf(currFile.ext) >= 0);
 
     currFile.type = fileType && fileType.type;
 
@@ -29,7 +27,7 @@ function parseFileList(fileList) {
       (currFile.type === types.TYPE_MEDIA_VIDEO ||
         currFile.ext === types.TYPE_EXT_GIF) &&
       currFile.name.match(
-        new RegExp("^.*" + types.TYPE_SUFFIX_ANIM + "\\..*$", "g")
+        new RegExp("^.*" + types.TYPE_SUFFIX_ANIM + "\\..*$", "g"),
       )
     ) {
       currFile.type = types.TYPE_MEDIA_ANIM;

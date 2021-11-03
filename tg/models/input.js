@@ -31,7 +31,7 @@ class InputMedia {
     thumb,
     caption,
     parseMode,
-    captionEntities
+    captionEntities,
   ) {
     this.type = type;
     this.mediaIdx = mediaIdx;
@@ -64,7 +64,7 @@ class InputMediaPhoto extends InputMedia {
       null,
       caption,
       parseMode,
-      captionEntities
+      captionEntities,
     );
   }
 }
@@ -97,7 +97,7 @@ class InputMediaVideo extends InputMedia {
     width,
     height,
     duration,
-    supportsStreaming
+    supportsStreaming,
   ) {
     super(
       INPUT_MEDIA_VIDEO,
@@ -106,7 +106,7 @@ class InputMediaVideo extends InputMedia {
       thumb,
       caption,
       parseMode,
-      captionEntities
+      captionEntities,
     );
     if (width != null) this.width = width;
     if (height != null) this.height = height;
@@ -141,7 +141,7 @@ class InputMediaAnimation extends InputMediaVideo {
     captionEntities,
     width,
     height,
-    duration
+    duration,
   ) {
     super(
       mediaIdx,
@@ -153,7 +153,7 @@ class InputMediaAnimation extends InputMediaVideo {
       width,
       height,
       duration,
-      null
+      null,
     );
     this.type = INPUT_MEDIA_ANIMATION;
   }
@@ -185,7 +185,7 @@ class InputMediaAudio extends InputMedia {
     captionEntities,
     duration,
     performer,
-    title
+    title,
   ) {
     super(
       INPUT_MEDIA_AUDIO,
@@ -194,7 +194,7 @@ class InputMediaAudio extends InputMedia {
       thumb,
       caption,
       parseMode,
-      captionEntities
+      captionEntities,
     );
     if (duration != null) this.duration = duration;
     if (performer != null) this.performer = performer;
@@ -224,7 +224,7 @@ class InputMediaDocument extends InputMedia {
     caption,
     parseMode,
     captionEntities,
-    disableContentTypeDetection
+    disableContentTypeDetection,
   ) {
     super(
       INPUT_MEDIA_DOCUMENT,
@@ -233,7 +233,7 @@ class InputMediaDocument extends InputMedia {
       thumb,
       caption,
       parseMode,
-      captionEntities
+      captionEntities,
     );
     if (disableContentTypeDetection != null) {
       this.disable_content_type_detection = disableContentTypeDetection;

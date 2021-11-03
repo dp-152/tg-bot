@@ -77,7 +77,7 @@ async function createMessages(parsedFileList) {
     // Elects head based on base name plus index to the tenths place
     // by separating into capture groups
     const matchBundle = file.name.match(
-      /^(.*)\{([0-9]*)([0-9])\}\.[a-zA-Z0-9]+/
+      /^(.*)\{([0-9]*)([0-9])\}\.[a-zA-Z0-9]+/,
     );
 
     // If file is part of a bundle (RegEx matched), set flags accordingly
@@ -106,7 +106,6 @@ async function createMessages(parsedFileList) {
       // inside current file object to append later members
       if (isBundleHead) file.bundleMembers = [];
     }
-
 
     // Check whether the current file has a caption.
     // If so, find the parse mode for the caption and get its contents
@@ -138,7 +137,6 @@ async function createMessages(parsedFileList) {
       ];
     }
 
-
     // ===========================================================
     //                      *** SEGMENT 3 ***
     // ===========================================================
@@ -158,7 +156,7 @@ async function createMessages(parsedFileList) {
         msgObj = new models.TgChatSendMessageModel(
           options.targetChatID,
           messageContent,
-          parseMode
+          parseMode,
         );
         break;
       }
@@ -175,18 +173,23 @@ async function createMessages(parsedFileList) {
           msgObj = new models.TgChatSendMediaGroupModel(
             options.targetChatID,
             // Push the member index to the input media object for sorting
-            [new inputFiles.InputMediaPhoto(file.bundleMemberIndex, ...msgData)]
+            [
+              new inputFiles.InputMediaPhoto(
+                file.bundleMemberIndex,
+                ...msgData,
+              ),
+            ],
           );
-        // If current file is a bundle member, append msgData to bundle head's media array
+          // If current file is a bundle member, append msgData to bundle head's media array
         } else if (isBundleMember) {
           bundleList[file.bundleGroup].data.media.push(
-            new inputFiles.InputMediaPhoto(file.bundleMemberIndex, ...msgData)
+            new inputFiles.InputMediaPhoto(file.bundleMemberIndex, ...msgData),
           );
-        // If file is not part of a bundle, build the corresponding object from msgData
+          // If file is not part of a bundle, build the corresponding object from msgData
         } else {
           msgObj = new models.TgChatSendPhotoModel(
             options.targetChatID,
-            ...msgData
+            ...msgData,
           );
         }
         break;
@@ -198,20 +201,19 @@ async function createMessages(parsedFileList) {
         // "performer" and "title", which are currently unused
         if (isBundleHead) {
           // Create full object for bundle head
-          msgObj = new models.TgChatSendMediaGroupModel(
-            options.targetChatID,
-            [new inputFiles.InputMediaAudio(file.bundleMemberIndex, ...msgData)]
-          );
+          msgObj = new models.TgChatSendMediaGroupModel(options.targetChatID, [
+            new inputFiles.InputMediaAudio(file.bundleMemberIndex, ...msgData),
+          ]);
         } else if (isBundleMember) {
           // Append to existing bundle object when bundle member
           bundleList[file.bundleGroup].data.media.push(
-            new inputFiles.InputMediaAudio(file.bundleMemberIndex, ...msgData)
+            new inputFiles.InputMediaAudio(file.bundleMemberIndex, ...msgData),
           );
         } else {
           // Create regular object when not in a bundle
           msgObj = new models.TgChatSendAudioModel(
             options.targetChatID,
-            ...msgData
+            ...msgData,
           );
         }
         break;
@@ -220,26 +222,23 @@ async function createMessages(parsedFileList) {
       // Build object for document file
       case types.TYPE_MEDIA_DOC: {
         if (isBundleHead) {
-          msgObj = new models.TgChatSendMediaGroupModel(
-            options.targetChatID,
-            [
-              new inputFiles.InputMediaDocument(
-                file.bundleMemberIndex,
-                ...msgData
-              ),
-            ]
-          );
+          msgObj = new models.TgChatSendMediaGroupModel(options.targetChatID, [
+            new inputFiles.InputMediaDocument(
+              file.bundleMemberIndex,
+              ...msgData,
+            ),
+          ]);
         } else if (isBundleMember) {
           bundleList[file.bundleGroup].data.media.push(
             new inputFiles.InputMediaDocument(
               file.bundleMemberIndex,
-              ...msgData
-            )
+              ...msgData,
+            ),
           );
         } else {
           msgObj = new models.TgChatSendDocumentModel(
             options.targetChatID,
-            ...msgData
+            ...msgData,
           );
         }
         break;
@@ -248,18 +247,17 @@ async function createMessages(parsedFileList) {
       // Build object for video file
       case types.TYPE_MEDIA_VIDEO: {
         if (isBundleHead) {
-          msgObj = new models.TgChatSendMediaGroupModel(
-            options.targetChatID,
-            [new inputFiles.InputMediaVideo(file.bundleMemberIndex, ...msgData)]
-          );
+          msgObj = new models.TgChatSendMediaGroupModel(options.targetChatID, [
+            new inputFiles.InputMediaVideo(file.bundleMemberIndex, ...msgData),
+          ]);
         } else if (isBundleMember) {
           bundleList[file.bundleGroup].data.media.push(
-            new inputFiles.InputMediaVideo(file.bundleMemberIndex, ...msgData)
+            new inputFiles.InputMediaVideo(file.bundleMemberIndex, ...msgData),
           );
         } else {
           msgObj = new models.TgChatSendVideoModel(
             options.targetChatID,
-            ...msgData
+            ...msgData,
           );
         }
         break;
@@ -268,26 +266,23 @@ async function createMessages(parsedFileList) {
       // Build object for animation file
       case types.TYPE_MEDIA_ANIM: {
         if (isBundleHead) {
-          msgObj = new models.TgChatSendMediaGroupModel(
-            options.targetChatID,
-            [
-              new inputFiles.InputMediaAnimation(
-                file.bundleMemberIndex,
-                ...msgData
-              ),
-            ]
-          );
+          msgObj = new models.TgChatSendMediaGroupModel(options.targetChatID, [
+            new inputFiles.InputMediaAnimation(
+              file.bundleMemberIndex,
+              ...msgData,
+            ),
+          ]);
         } else if (isBundleMember) {
           bundleList[file.bundleGroup].data.media.push(
             new inputFiles.InputMediaAnimation(
               file.bundleMemberIndex,
-              ...msgData
-            )
+              ...msgData,
+            ),
           );
         } else {
           msgObj = new models.TgChatSendAnimationModel(
             options.targetChatID,
-            ...msgData
+            ...msgData,
           );
         }
 
@@ -308,7 +303,7 @@ async function createMessages(parsedFileList) {
       // This applies to both the main media file, bundle media and thumbnails
       if (options.handleFiles === "local") {
         bundleList[file.bundleGroup].data[file.name] = fs.createReadStream(
-          file.path
+          file.path,
         );
         if (file.thumbFile) {
           bundleList[file.bundleGroup][file.thumbFile.name] =
@@ -322,7 +317,7 @@ async function createMessages(parsedFileList) {
         msgObj[file.name] = fs.createReadStream(file.path);
         if (file.thumbFile) {
           msgObj[file.thumbFile.name] = fs.createReadStream(
-            file.thumbFile.path
+            file.thumbFile.path,
           );
         }
       }
