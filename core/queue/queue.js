@@ -31,20 +31,22 @@ function deleteTopN(n) {
   console.log("Queue lock released");
 }
 
-function deleteByName(name) {
-  console.log(`Deleting ${name} from queue`);
-  queue.splice(queue.findIndex(msg => {
-    if (msg.bundleMembers) {
-      for (const bMember of msg.bundleMembers) {
-        if (bMember.name === name) return true;
+function deleteNames(nameList) {
+  for (const name of nameList) {
+    console.log(`Deleting ${name} from queue`);
+    queue.splice(queue.findIndex(msg => {
+      if (msg.bundleMembers) {
+        for (const bMember of msg.bundleMembers) {
+          if (bMember.name === name) return true;
+        }
+        return false;
       }
+      if (msg.name === name) return true;
+      if (msg.thumbFile.name === name) return true;
+      if (msg.captionFile.name === name) return true;
       return false;
-    }
-    if (msg.name === name) return true;
-    if (msg.thumbFile === name) return true;
-    if (msg.captionFile === name) return true;
-    return false;
-  }), 1);
+    }), 1);
+  }
 }
 
 function pullExclude() {
@@ -58,6 +60,7 @@ function getQueueFiles() {
   // Grab name for message file, bundle members,
   // thumb and caption files
   for (const msg of queue) {
+    if (exclude.includes(msg)) continue;
     if (msg.bundleMembers) {
       for (const bMember of msg.bundleMembers) {
         names.push(bMember.name);
@@ -78,7 +81,7 @@ module.exports = {
   addToQueue,
   pullTopN,
   deleteTopN,
-  deleteByName,
+  deleteNames,
   addToExclude,
   pullExclude,
   getQueueFiles,
