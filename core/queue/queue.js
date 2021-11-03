@@ -63,13 +63,13 @@ function deleteNames(nameList) {
     queue.splice(queue.findIndex(msg => {
       if (msg.bundleMembers) {
         for (const bMember of msg.bundleMembers) {
-          if (bMember.name === name) return true;
+          if (bMember.path === name) return true;
         }
         return false;
       }
-      if (msg.name === name) return true;
-      if (msg.thumbFile.name === name) return true;
-      if (msg.captionFile.name === name) return true;
+      if (msg.path === name) return true;
+      if (msg.thumbFile.path === name) return true;
+      if (msg.captionFile.path === name) return true;
       return false;
     }), 1);
   }
@@ -99,14 +99,14 @@ function getQueueFiles() {
     if (exclude.includes(msg)) continue;
     if (msg.bundleMembers) {
       for (const bMember of msg.bundleMembers) {
-        names.push(bMember.name);
-        if (bMember.thumbFile) names.push(bMember.thumbFile.name);
+        names.push(bMember.path);
+        if (bMember.thumbFile) names.push(bMember.thumbFile.path);
         if (bMember.captionFile) names.push(bMember.captionFile);
       }
       continue;
     }
 
-    names.push(msg.name);
+    names.push(msg.path);
     if (msg.thumbFile) names.push(msg.thumbFile);
     if (msg.captionFile) names.push(msg.captionFile);
   }
