@@ -22,9 +22,7 @@ async function fetchDirContent(rootPath) {
  * @returns {Array<object>} - List of objects containing the file info and stats
  */
 async function getFileMeta(fileList) {
-  const result = [];
-
-  for (const fPath of fileList) {
+  const promises = fileList.map(async fPath => {
     const stat = await fs.stat(fPath);
 
     // Gather stat data for current file
@@ -34,16 +32,19 @@ async function getFileMeta(fileList) {
       // Grab the file extension
       const fExt = path.extname(fName).toLowerCase();
 
-      result.push({
+      return ({
         name: fName,
         path: fPath,
         ext: fExt,
         stat,
       });
     }
-  }
+  });
 
-  return result;
+  const result = await Promise.all(promises);
+
+  // Filter out any undefined values
+  return result.filter(f => f);
 }
 
 /**
