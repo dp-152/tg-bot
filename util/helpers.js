@@ -17,6 +17,17 @@ function arrayDiff(arrA, arrB) {
   return result;
 }
 
+/**
+ * Escapes illegal characters on a string for use in a RegExp
+ *
+ * @param {string} string - String to be escaped
+ * @returns {string} - Returns a string with escaped characters
+ */
+function escapeRegex(string) {
+  return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+}
+
 module.exports = {
   arrayDiff,
+  escapeRegex,
 };

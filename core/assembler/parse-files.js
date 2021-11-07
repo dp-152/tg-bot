@@ -1,4 +1,5 @@
 const types = require("../models/types");
+const { escapeRegex: esc } = require("../../util/helpers");
 
 /**
  * Sorts files by name
@@ -35,7 +36,7 @@ function parseFileList(fileList) {
     // Bypass file type checking if file has a document suffix
     if (
       currFile.name.match(
-        new RegExp("^.*" + types.TYPE_SUFFIX_DOC + "\\..*$", "g"),
+        new RegExp("^.*" + esc(types.TYPE_SUFFIX_DOC) + "\\..*$", "g"),
       )
     ) {
       mediaType = types.TYPE_MEDIA_DOC;
@@ -58,7 +59,7 @@ function parseFileList(fileList) {
       currFile.ext === types.TYPE_EXT_GIF ||
       (currFile.type === types.TYPE_MEDIA_VIDEO &&
         currFile.name.match(
-          new RegExp("^.*" + types.TYPE_SUFFIX_ANIM + "\\..*$", "g"),
+          new RegExp("^.*" + esc(types.TYPE_SUFFIX_ANIM) + "\\..*$", "g"),
         ))
     ) {
       currFile.type = types.TYPE_MEDIA_ANIM;
@@ -67,18 +68,18 @@ function parseFileList(fileList) {
     // Look for either a caption file or a thumb file for current file
     // Create regexp to match expected file name and all possible extensions
     const thumbRegExp = new RegExp(
-      currFile.name +
-        types.TYPE_SUFFIX_THUMB +
-        `(${types.TYPE_EXT_JPG}|` +
-        `${types.TYPE_EXT_JPEG})`,
+      esc(currFile.name) +
+        esc(types.TYPE_SUFFIX_THUMB) +
+        `(${esc(types.TYPE_EXT_JPG)}|` +
+        `${esc(types.TYPE_EXT_JPEG)})`,
     );
     const captionRegExp = new RegExp(
-      currFile.name +
-        types.TYPE_SUFFIX_CAPTION +
-        `(${types.TYPE_EXT_TXT}|` +
-        `${types.TYPE_EXT_HTM}|` +
-        `${types.TYPE_EXT_HTML}|` +
-        `${types.TYPE_EXT_MD})`,
+      esc(currFile.name) +
+        esc(types.TYPE_SUFFIX_CAPTION) +
+        `(${esc(types.TYPE_EXT_TXT)}|` +
+        `${esc(types.TYPE_EXT_HTM)}|` +
+        `${esc(types.TYPE_EXT_HTML)}|` +
+        `${esc(types.TYPE_EXT_MD)})`,
     );
 
     // Slice the list from current file index, including the next 4 files
@@ -105,7 +106,8 @@ function parseFileList(fileList) {
       !currFile.name.match(
         new RegExp(
           "^.*.[a-zA-Z0-9]+" +
-            `(${types.TYPE_SUFFIX_CAPTION}|${types.TYPE_SUFFIX_THUMB})` +
+            `(${esc(types.TYPE_SUFFIX_CAPTION)}|` +
+            `${esc(types.TYPE_SUFFIX_THUMB)})` +
             ".[a-zA-Z0-9]+$",
           "g",
         ),
