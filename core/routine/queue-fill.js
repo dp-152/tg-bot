@@ -19,8 +19,9 @@ async function fillQueue() {
 
   const newFilesList = arrayDiff(dirFilesList, queueFilesList);
   const fileMetaList = await getFileMeta(newFilesList);
-  const sortedFlList = sortFilesByDate(fileMetaList);
-  const messagesList = await createMessages(parseFileList(sortedFlList));
+  const parsedFlList = parseFileList(fileMetaList);
+  const sortedFlList = sortFilesByDate(parsedFlList);
+  const messagesList = await createMessages(sortedFlList);
   addToQueue(messagesList);
 }
 
