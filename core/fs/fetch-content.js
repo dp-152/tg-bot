@@ -11,7 +11,6 @@ async function fetchDirContent(rootPath) {
   const dirContent = (await fs.readdir(rootPath)).map(fName =>
     path.resolve(path.join(rootPath, fName)),
   );
-  dirContent.sort();
   return dirContent;
 }
 
