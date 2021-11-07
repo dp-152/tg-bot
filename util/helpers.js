@@ -24,7 +24,7 @@ function arrayDiff(arrA, arrB) {
  * @returns {string} - Returns a string with escaped characters
  */
 function escapeRegex(string) {
-  return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+  return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
 }
 
 module.exports = {
