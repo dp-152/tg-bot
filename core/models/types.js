@@ -8,6 +8,7 @@ const TYPE_MEDIA_ANIM = "animation";
 const TYPE_SUFFIX_ANIM = "_animation";
 const TYPE_SUFFIX_THUMB = "_thumb";
 const TYPE_SUFFIX_CAPTION = "_caption";
+const TYPE_SUFFIX_DOC = "_document";
 
 const TYPE_EXT_MP4 = ".mp4";
 
@@ -88,6 +89,7 @@ module.exports = {
   TYPE_SUFFIX_ANIM,
   TYPE_SUFFIX_THUMB,
   TYPE_SUFFIX_CAPTION,
+  TYPE_SUFFIX_DOC,
   TYPE_EXT_MP4,
   TYPE_EXT_JPG,
   TYPE_EXT_JPEG,
