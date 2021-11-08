@@ -60,8 +60,16 @@ function* pullGenerator(n) {
     console.log("Yielding an item from the queue");
     const item = queue[0];
     if (!item) {
-      console.log("Queue is empty, breaking");
-      break;
+      if (queue.length === 0) {
+        console.log("Queue is empty, breaking");
+        break;
+      } else {
+        console.log("Found an undefined item in the queue. Refusing to yield");
+        console.log("Removing the item and rolling back counter");
+        queue.splice(0, 1);
+        i--;
+        continue;
+      }
     }
     yield item;
   }
