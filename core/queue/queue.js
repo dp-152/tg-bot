@@ -28,6 +28,7 @@ function addToExclude(message) {
   queue.splice(0, 1);
 }
 
+/* eslint-disable jsdoc/no-undefined-types */
 /**
  * Fetches the top n messages from the queue
  *
@@ -41,6 +42,7 @@ function pullTopN(n) {
   }
   return pullGenerator(n);
 }
+/* eslint-enable jsdoc/no-undefined-types */
 
 /**
  * Creates a generator for the top n messages from the queue
