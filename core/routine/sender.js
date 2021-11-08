@@ -5,6 +5,44 @@ const { send } = require("../../tg/interface/send");
 
 
 /**
+ * Wraps a send call to handle errors.
+ *
+ * @param {object} msgData - Message data to be sent.
+ * @param {number} ticks - Number of attempts made up to the current call
+ */
+async function sendWrapper(msgData, ticks = 1) {
+  if (ticks > 5) {
+    console.log("Failed to send message after 5 attempts. Closing");
+    const err = new Error("Failed to send message after 5 attempts. Closing");
+    err.code = "ERR_TOO_MANY_ATTEMPTS";
+    throw err;
+  }
+  let retry = false;
+  try {
+    await send(msgData);
+  } catch (err) {
+    console.log("Error sending message:", err);
+
+    if (!err.response) {
+      console.log("Server unavailable. Reason:", err.code);
+      retry = true;
+    } else {
+      console.log("Server response:", err.response.data);
+      if (err.response.status === 429) {
+        retry = true;
+      }
+    }
+  }
+  if (retry) {
+    console.log("Trying again in 30 seconds...");
+    await new Promise(res => {
+      setTimeout(res, 30 * 1000);
+    });
+    await sendWrapper(msgData, ++ticks);
+  }
+}
+
+/**
  * @description Executes a single send job.
  */
 async function sendJob() {
@@ -23,25 +61,8 @@ async function sendJob() {
     console.log(`Sending message from file ${msg.name}`);
     console.log(`- Has thumb: ${!!msg.thumbFile}`);
     console.log(`- Has caption: ${!!msg.captionFile}`);
-    try {
-      await send(msg.data);
-    } catch (err) {
-      console.log("Message send failed with the following error:");
-      console.log(err.response.data);
-      if (err.response.status === 429) {
-        console.log("API responded with too many requests error.");
-        console.log("Will wait for 30 seconds and then try again");
-        await new Promise(res => {
-          setTimeout(res, 30 * 1000);
-        });
-        try {
-          await send(msg.data);
-        } catch (err) {
-          console.log("Sending message has failed again.");
-          console.log(err.response.data);
-        }
-      }
-    }
+
+    await sendWrapper(msg.data);
     addToExclude(msg);
 
     let timeout;
