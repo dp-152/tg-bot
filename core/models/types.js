@@ -25,6 +25,9 @@ const TYPE_EXT_MD = ".md";
 const TYPE_EXT_HTM = ".htm";
 const TYPE_EXT_HTML = ".html";
 
+const TYPE_PARSEMODE_HTML = "HTML";
+const TYPE_PARSEMODE_MD = "MarkdownV2";
+
 const knownMedias = [
   {
     type: TYPE_MEDIA_VIDEO,
@@ -101,5 +104,7 @@ module.exports = {
   TYPE_EXT_MD,
   TYPE_EXT_HTM,
   TYPE_EXT_HTML,
+  TYPE_PARSEMODE_HTML,
+  TYPE_PARSEMODE_MD,
   knownMedias,
 };
