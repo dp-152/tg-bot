@@ -1,6 +1,6 @@
 const { options } = require("../../util/config");
 const { initFillQueue } = require("./queue-fill");
-const { pullTopN, deleteTopN, addToExclude } = require("../queue/queue");
+const { pullTopN, addToExclude } = require("../queue/queue");
 const { send } = require("../../tg/interface/send");
 
 
@@ -52,7 +52,6 @@ async function sendJob() {
       setTimeout(res, timeout * 1000);
     });
   }
-  deleteTopN(list.length);
 }
 
 /**
