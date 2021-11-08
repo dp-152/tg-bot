@@ -1,55 +1,47 @@
 const { options } = require("../../util/config");
+const { arrayDiff } = require("../../util/helpers");
 const { parseFileList } = require("../assembler/parse-files");
 const { createMessages } = require("../assembler/build-messages");
-const { addToQueue, getNamesInQueue } = require("../queue/queue");
-const { moveSent } = require("./sent-cleanup");
+const {
+  addToQueue,
+  getQueueFiles,
+  pullExclude,
+  deleteNames,
+} = require("../queue/queue");
+const { moveSentFiles } = require("../fs/move-sent");
 const {
   fetchDirContent,
   getFileMeta,
   sortFilesByDate,
 } = require("../fs/fetch-content");
 
-function removeInQueue(inputList) {
-  const outputList = [];
-  const qFileNames = getNamesInQueue();
-
-  for (let i = 0; i < inputList.length; i++) {
-    if (
-      inputList[i].match(/^.*\.[a-zA-Z0-9]+_(caption|thumb)\.[a-zA-Z0-9]+$/g)
-    ) {
-      outputList.push(inputList[i]);
-      continue;
-    }
-
-    let match = false;
-    for (let j = 0; j < qFileNames.length; j++) {
-      if (inputList[i] === qFileNames[j]) {
-        match = true;
-        break;
-      }
-    }
-    if (!match) outputList.push(inputList[i]);
-  }
-
-  return outputList;
-}
-
+/**
+ * @description Fills the queue with files from the file system
+ */
 async function fillQueue() {
-  console.log("Will begin seeking new files from the file system");
-  const fileNamesList = await fetchDirContent(options.loadPath);
-  const cleanFlNmList = removeInQueue(fileNamesList);
-  const sortedFlList = sortFilesByDate(
-    await getFileMeta(options.loadPath, cleanFlNmList)
-  );
-  const appendList = await createMessages(parseFileList(sortedFlList));
-  addToQueue(appendList);
+  const queueFilesList = getQueueFiles();
+  const dirFilesList = await fetchDirContent(options.loadPath);
+
+  const missingFiles = arrayDiff(queueFilesList, dirFilesList);
+  deleteNames(missingFiles);
+
+  const newFilesList = arrayDiff(dirFilesList, queueFilesList);
+  const fileMetaList = await getFileMeta(newFilesList);
+  const parsedFlList = parseFileList(fileMetaList);
+  const sortedFlList = sortFilesByDate(parsedFlList);
+  const messagesList = await createMessages(sortedFlList);
+  addToQueue(messagesList);
 }
 
+/**
+ * @description Initializes the queue fill routine
+ */
 async function initFillQueue() {
   await fillQueue();
   setInterval(async () => {
-    await moveSent();
-    fillQueue();
+    const excludedFiles = pullExclude();
+    await moveSentFiles(excludedFiles);
+    fillQueue(excludedFiles);
   }, (options.sendEvery / 2) * 60 * 1000);
 }
 

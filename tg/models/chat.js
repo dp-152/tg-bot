@@ -21,6 +21,7 @@ class TgChatModel {
 
 /**
  * Base class for send interfaces
+ *
  * @extends TgChatModel
  */
 class TgChatSendModel extends TgChatModel {
@@ -45,7 +46,7 @@ class TgChatSendModel extends TgChatModel {
     disableNotification,
     replyToMessageID,
     allowSendingWithoutReply,
-    replyMarkup
+    replyMarkup,
   ) {
     super(chatID);
     if (text != null) this.text = text;
@@ -67,6 +68,7 @@ class TgChatSendModel extends TgChatModel {
 
 /**
  * Sends a text message
+ *
  * @extends TgChatSendModel
  */
 class TgChatSendMessageModel extends TgChatSendModel {
@@ -91,7 +93,7 @@ class TgChatSendMessageModel extends TgChatSendModel {
     disableNotification,
     replyToMessageID,
     allowSendingWithoutReply,
-    replyMarkup
+    replyMarkup,
   ) {
     super(
       chatID,
@@ -102,7 +104,7 @@ class TgChatSendMessageModel extends TgChatSendModel {
       disableNotification,
       replyToMessageID,
       allowSendingWithoutReply,
-      replyMarkup
+      replyMarkup,
     );
     this.route = "/sendMessage";
   }
@@ -131,7 +133,7 @@ class TgChatSendMediaModel extends TgChatSendModel {
     disableNotification,
     replyToMessageID,
     allowSendingWithoutReply,
-    replyMarkup
+    replyMarkup,
   ) {
     /**
      * Text -> Caption
@@ -147,7 +149,7 @@ class TgChatSendMediaModel extends TgChatSendModel {
       disableNotification,
       replyToMessageID,
       allowSendingWithoutReply,
-      replyMarkup
+      replyMarkup,
     );
     if (caption != null) this.caption = caption;
     if (captionEntities != null) this.captionEntities = captionEntities;
@@ -156,6 +158,7 @@ class TgChatSendMediaModel extends TgChatSendModel {
 
 /**
  * Defines an object for sending a single image file
+ *
  * @extends TgChatSendMediaModel
  */
 class TgChatSendPhotoModel extends TgChatSendMediaModel {
@@ -180,7 +183,7 @@ class TgChatSendPhotoModel extends TgChatSendMediaModel {
     disableNotification,
     replyToMessageID,
     allowSendingWithoutReply,
-    replyMarkup
+    replyMarkup,
   ) {
     super(
       chatID,
@@ -190,15 +193,73 @@ class TgChatSendPhotoModel extends TgChatSendMediaModel {
       disableNotification,
       replyToMessageID,
       allowSendingWithoutReply,
-      replyMarkup
+      replyMarkup,
     );
 
     this.route = "/sendPhoto";
     this.photo = photo;
   }
 }
+
 /**
- * Sends a document file
+ * Defines an object for sending a single audio file
+ *
+ * @extends TgChatSendMediaModel
+ */
+class TgChatSendAudioModel extends TgChatSendMediaModel {
+  /**
+   *
+   * @param {(string|number)} chatID - Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+   * @param {(FsReadStream|string)} audio - Audio file to send. Pass a file_id as String to send an audio file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get an audio file from the Internet, or upload a new one using multipart/form-data.
+   * @param {(FsReadStream|string)} [thumb] - (Optional) Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>.
+   * @param {string} [caption] - (Optional) Audio caption, 0-1024 characters after entities parsing
+   * @param {ParseMode} [parseMode] - (Optional) Mode for parsing entities in the message text
+   * @param {Array<MessageEntity>} [captionEntities] - (Optional) A JSON-serialized list of special entities that appear in message text, which can be specified instead of parse_mode
+   * @param {number} [duration] - (Optional) Duration of the audio in seconds
+   * @param {string} [performer] - (Optional) Performer
+   * @param {string} [title] - (Optional) Track name
+   * @param {boolean} [disableNotification] - (Optional) Sends the message silently. Users will receive a notification with no sound.
+   * @param {number} [replyToMessageID] - (Optional) If the message is a reply, ID of the original message
+   * @param {boolean} [allowSendingWithoutReply] - (Optional) Pass True, if the message should be sent even if the specified replied-to message is not found
+   * @param {Array} [replyMarkup] - (Optional) - Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
+   */
+  constructor(
+    chatID,
+    audio,
+    thumb,
+    caption,
+    parseMode,
+    captionEntities,
+    duration,
+    performer,
+    title,
+    disableNotification,
+    replyToMessageID,
+    allowSendingWithoutReply,
+    replyMarkup,
+  ) {
+    super(
+      chatID,
+      caption,
+      parseMode,
+      captionEntities,
+      disableNotification,
+      replyToMessageID,
+      allowSendingWithoutReply,
+      replyMarkup,
+    );
+    this.route = "/sendAudio";
+    this.audio = audio;
+    if (thumb != null) this.thumb = thumb;
+    if (duration != null) this.duration = duration;
+    if (performer != null) this.performer = performer;
+    if (title != null) this.title = title;
+  }
+}
+
+/**
+ * Defines an object for sending a document file
+ *
  * @extends TgChatSendMediaModel
  */
 class TgChatSendDocumentModel extends TgChatSendMediaModel {
@@ -227,7 +288,7 @@ class TgChatSendDocumentModel extends TgChatSendMediaModel {
     disableNotification,
     replyToMessageID,
     allowSendingWithoutReply,
-    replyMarkup
+    replyMarkup,
   ) {
     super(
       chatID,
@@ -237,7 +298,7 @@ class TgChatSendDocumentModel extends TgChatSendMediaModel {
       disableNotification,
       replyToMessageID,
       allowSendingWithoutReply,
-      replyMarkup
+      replyMarkup,
     );
     this.route = "/sendDocument";
     this.document = document;
@@ -249,6 +310,7 @@ class TgChatSendDocumentModel extends TgChatSendMediaModel {
 }
 /**
  * Sends a video file
+ *
  * @extends TgChatSendMediaModel
  */
 class TgChatSendVideoModel extends TgChatSendMediaModel {
@@ -281,7 +343,7 @@ class TgChatSendVideoModel extends TgChatSendMediaModel {
     disableNotification,
     replyToMessageID,
     allowSendingWithoutReply,
-    replyMarkup
+    replyMarkup,
   ) {
     super(
       chatID,
@@ -291,7 +353,7 @@ class TgChatSendVideoModel extends TgChatSendMediaModel {
       disableNotification,
       replyToMessageID,
       allowSendingWithoutReply,
-      replyMarkup
+      replyMarkup,
     );
     this.route = "/sendVideo";
     this.video = video;
@@ -304,6 +366,7 @@ class TgChatSendVideoModel extends TgChatSendMediaModel {
 
 /**
  * Sends an animation (GIF, MP4 without audio)
+ *
  * @extends TgChatSendVideoModel
  */
 class TgChatSendAnimationModel extends TgChatSendVideoModel {
@@ -326,17 +389,17 @@ class TgChatSendAnimationModel extends TgChatSendVideoModel {
   constructor(
     chatID,
     animation,
-    duration,
-    width,
-    height,
     thumb,
     caption,
     parseMode,
     captionEntities,
+    width,
+    height,
+    duration,
     disableNotification,
     replyToMessageID,
     allowSendingWithoutReply,
-    replyMarkup
+    replyMarkup,
   ) {
     super(
       chatID,
@@ -351,7 +414,7 @@ class TgChatSendAnimationModel extends TgChatSendVideoModel {
       disableNotification,
       replyToMessageID,
       allowSendingWithoutReply,
-      replyMarkup
+      replyMarkup,
     );
     delete this.video;
     this.route = "/sendAnimation";
@@ -360,6 +423,7 @@ class TgChatSendAnimationModel extends TgChatSendVideoModel {
 }
 /**
  * Sends a group of media files (2-10)
+ *
  * @extends TgChatSendMediaModel
  */
 class TgChatSendMediaGroupModel extends TgChatSendMediaModel {
@@ -376,7 +440,7 @@ class TgChatSendMediaGroupModel extends TgChatSendMediaModel {
     mediaArr,
     disableNotification,
     replyToMessageID,
-    allowSendingWithoutReply
+    allowSendingWithoutReply,
   ) {
     super(
       chatID,
@@ -386,7 +450,7 @@ class TgChatSendMediaGroupModel extends TgChatSendMediaModel {
       disableNotification,
       replyToMessageID,
       allowSendingWithoutReply,
-      null
+      null,
     );
     this.route = "/sendMediaGroup";
     this.media = mediaArr;
@@ -396,6 +460,7 @@ class TgChatSendMediaGroupModel extends TgChatSendMediaModel {
 module.exports = {
   TgChatSendMessageModel,
   TgChatSendPhotoModel,
+  TgChatSendAudioModel,
   TgChatSendDocumentModel,
   TgChatSendVideoModel,
   TgChatSendAnimationModel,

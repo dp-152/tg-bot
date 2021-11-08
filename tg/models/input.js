@@ -19,7 +19,7 @@ class InputMedia {
    * @param {string} type - Type of the result. Must be one of "photo", "video", "animation", "audio" or "document"
    * @param {number} mediaIdx - Index of the media input
    * @param {string} media  - File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass "attach://<file_attach_name>" to upload a new one using multipart/form-data under <file_attach_name>
-   * @param {(FsReadStream|string)} [thumb] - (Optional) Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>.
+   * @param {string} [thumb] - (Optional) Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>.
    * @param {string} [caption] - (Optional) Caption of the media to be sent, 0-1024 characters after entities parsing
    * @param {ParseMode} [parseMode] - (Optional) Mode for parsing entities in the media caption.
    * @param {Array} [captionEntities] - (Optional) List of special entities that appear in the caption, which can be specified instead of parse_mode
@@ -31,7 +31,7 @@ class InputMedia {
     thumb,
     caption,
     parseMode,
-    captionEntities
+    captionEntities,
   ) {
     this.type = type;
     this.mediaIdx = mediaIdx;
@@ -64,13 +64,14 @@ class InputMediaPhoto extends InputMedia {
       null,
       caption,
       parseMode,
-      captionEntities
+      captionEntities,
     );
   }
 }
 
 /**
  * Model for video input
+ *
  * @extends InputMedia
  */
 class InputMediaVideo extends InputMedia {
@@ -78,7 +79,7 @@ class InputMediaVideo extends InputMedia {
    *
    * @param {number} mediaIdx - Index of the media input
    * @param {string} media  - File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass "attach://<file_attach_name>" to upload a new one using multipart/form-data under <file_attach_name>
-   * @param {(FsReadStream|string)} [thumb] - (Optional) Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>.
+   * @param {string} [thumb] - (Optional) Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>.
    * @param {string} [caption] - (Optional) Caption of the video to be sent, 0-1024 characters after entities parsing
    * @param {ParseMode} [parseMode] - (Optional) Mode for parsing entities in the video caption.
    * @param {Array} [captionEntities] - (Optional) List of special entities that appear in the caption, which can be specified instead of parse_mode
@@ -97,7 +98,7 @@ class InputMediaVideo extends InputMedia {
     width,
     height,
     duration,
-    supportsStreaming
+    supportsStreaming,
   ) {
     super(
       INPUT_MEDIA_VIDEO,
@@ -106,7 +107,7 @@ class InputMediaVideo extends InputMedia {
       thumb,
       caption,
       parseMode,
-      captionEntities
+      captionEntities,
     );
     if (width != null) this.width = width;
     if (height != null) this.height = height;
@@ -117,6 +118,7 @@ class InputMediaVideo extends InputMedia {
 
 /**
  * Model for animation input (GIF, MP4 without audio)
+ *
  * @extends InputMediaVideo
  */
 class InputMediaAnimation extends InputMediaVideo {
@@ -124,7 +126,7 @@ class InputMediaAnimation extends InputMediaVideo {
    *
    * @param {number} mediaIdx - Index of the media input
    * @param {string} media  - File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass "attach://<file_attach_name>" to upload a new one using multipart/form-data under <file_attach_name>
-   * @param {(FsReadStream|string)} [thumb] - (Optional) Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>.
+   * @param {string} [thumb] - (Optional) Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>.
    * @param {string} [caption] - (Optional) Caption of the animation to be sent, 0-1024 characters after entities parsing
    * @param {ParseMode} [parseMode] - (Optional) Mode for parsing entities in the animation caption.
    * @param {Array} [captionEntities] - (Optional) List of special entities that appear in the caption, which can be specified instead of parse_mode
@@ -141,7 +143,7 @@ class InputMediaAnimation extends InputMediaVideo {
     captionEntities,
     width,
     height,
-    duration
+    duration,
   ) {
     super(
       mediaIdx,
@@ -153,7 +155,7 @@ class InputMediaAnimation extends InputMediaVideo {
       width,
       height,
       duration,
-      null
+      null,
     );
     this.type = INPUT_MEDIA_ANIMATION;
   }
@@ -161,14 +163,15 @@ class InputMediaAnimation extends InputMediaVideo {
 
 /**
  * Model for audio input
- * @Extends InputMedia
+ *
+ * @extends InputMedia
  */
 class InputMediaAudio extends InputMedia {
   /**
    *
    * @param {number} mediaIdx - Index of the media input
    * @param {string} media  - File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass "attach://<file_attach_name>" to upload a new one using multipart/form-data under <file_attach_name>
-   * @param {(FsReadStream|string)} [thumb] - (Optional) Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>.
+   * @param {string} [thumb] - (Optional) Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>.
    * @param {string} [caption] - (Optional) Caption of the photo to be sent, 0-1024 characters after entities parsing
    * @param {ParseMode} [parseMode] - (Optional) Mode for parsing entities in the photo caption.
    * @param {Array} [captionEntities] - (Optional) List of special entities that appear in the caption, which can be specified instead of parse_mode
@@ -185,7 +188,7 @@ class InputMediaAudio extends InputMedia {
     captionEntities,
     duration,
     performer,
-    title
+    title,
   ) {
     super(
       INPUT_MEDIA_AUDIO,
@@ -194,7 +197,7 @@ class InputMediaAudio extends InputMedia {
       thumb,
       caption,
       parseMode,
-      captionEntities
+      captionEntities,
     );
     if (duration != null) this.duration = duration;
     if (performer != null) this.performer = performer;
@@ -204,6 +207,7 @@ class InputMediaAudio extends InputMedia {
 
 /**
  * Model for document input
+ *
  * @extends InputMedia
  */
 class InputMediaDocument extends InputMedia {
@@ -211,7 +215,7 @@ class InputMediaDocument extends InputMedia {
    *
    * @param {number} mediaIdx - Index of the media input
    * @param {string} media  - File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass "attach://<file_attach_name>" to upload a new one using multipart/form-data under <file_attach_name>
-   * @param {(FsReadStream|string)} [thumb] - (Optional) Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>.
+   * @param {string} [thumb] - (Optional) Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>.
    * @param {string} [caption] - (Optional) Caption of the document to be sent, 0-1024 characters after entities parsing
    * @param {ParseMode} [parseMode] - (Optional) Mode for parsing entities in the document caption.
    * @param {Array} [captionEntities] - (Optional) List of special entities that appear in the caption, which can be specified instead of parse_mode
@@ -224,7 +228,7 @@ class InputMediaDocument extends InputMedia {
     caption,
     parseMode,
     captionEntities,
-    disableContentTypeDetection
+    disableContentTypeDetection,
   ) {
     super(
       INPUT_MEDIA_DOCUMENT,
@@ -233,7 +237,7 @@ class InputMediaDocument extends InputMedia {
       thumb,
       caption,
       parseMode,
-      captionEntities
+      captionEntities,
     );
     if (disableContentTypeDetection != null) {
       this.disable_content_type_detection = disableContentTypeDetection;

@@ -8,6 +8,7 @@ const TYPE_MEDIA_ANIM = "animation";
 const TYPE_SUFFIX_ANIM = "_animation";
 const TYPE_SUFFIX_THUMB = "_thumb";
 const TYPE_SUFFIX_CAPTION = "_caption";
+const TYPE_SUFFIX_DOC = "_document";
 
 const TYPE_EXT_MP4 = ".mp4";
 
@@ -23,6 +24,9 @@ const TYPE_EXT_TXT = ".txt";
 const TYPE_EXT_MD = ".md";
 const TYPE_EXT_HTM = ".htm";
 const TYPE_EXT_HTML = ".html";
+
+const TYPE_PARSEMODE_HTML = "HTML";
+const TYPE_PARSEMODE_MD = "MarkdownV2";
 
 const knownMedias = [
   {
@@ -88,6 +92,7 @@ module.exports = {
   TYPE_SUFFIX_ANIM,
   TYPE_SUFFIX_THUMB,
   TYPE_SUFFIX_CAPTION,
+  TYPE_SUFFIX_DOC,
   TYPE_EXT_MP4,
   TYPE_EXT_JPG,
   TYPE_EXT_JPEG,
@@ -99,5 +104,7 @@ module.exports = {
   TYPE_EXT_MD,
   TYPE_EXT_HTM,
   TYPE_EXT_HTML,
+  TYPE_PARSEMODE_HTML,
+  TYPE_PARSEMODE_MD,
   knownMedias,
 };

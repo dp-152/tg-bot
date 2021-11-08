@@ -13,23 +13,25 @@ const botFullPath = `/bot${options.botAPIKey}`;
  * Performs a send to Telegram's bot API server
  * Will send all the data contained in the tgData object
  * to the route declared in tgData.route
- * @param {TgChatModel} tgData - TgModel data object to be sent
- * @param {boolean} isReadStream - True if the attachment in the data object is a readStream
- * @return {Promise} HTTP request promise
+ *
+ * @param {TgChatModel} msgData - TgModel data object to be sent
+ * @returns {Promise} HTTP request promise
  */
-function send(tgData, isReadStream = false) {
-  if (isReadStream) {
+function send(msgData) {
+  if (options.handleFiles === "local") {
     const formData = new FormData();
-    for (const key in tgData) {
-      if (tgData.hasOwnProperty(key) && key !== "path") {
-        formData.append(key, tgData[key]);
+    for (const key in msgData) {
+      if (msgData.hasOwnProperty(key) && key !== "path") {
+        let data = msgData[key];
+        if (Array.isArray(data)) data = JSON.stringify(data);
+        formData.append(key, data);
       }
     }
-    return axios.post(botServerUrl + botFullPath + tgData.route, formData, {
+    return axios.post(botServerUrl + botFullPath + msgData.route, formData, {
       headers: formData.getHeaders(),
     });
   } else {
-    return axios.post(botServerUrl + botFullPath + tgData.route, tgData);
+    return axios.post(botServerUrl + botFullPath + msgData.route, msgData);
   }
 }
 

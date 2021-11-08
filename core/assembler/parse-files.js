@@ -1,84 +1,117 @@
 const types = require("../models/types");
+const { escapeRegex: esc } = require("../../util/helpers");
+
+/**
+ * Sorts files by name
+ *
+ * @param {Array} fileList - Array containing file list to be sorted
+ * @returns {Array} - Sorted file list
+ */
+function preSortFiles(fileList) {
+  return fileList.sort((a, b) => {
+    if (a.name < b.name) return -1;
+    if (a.name > b.name) return 1;
+    return 0;
+  });
+}
 
 /**
  * Parses a list of files
- * Will append file extension, media type, thumbnail (if available) and caption (if available)
+ * Will append info such as media type, thumbnail (if available) and caption (if available)
+ *
  * @param {Array} fileList - Array containing file list to be parsed
- * @return {Array} - File list with parsed data
+ * @returns {Array} - File list with parsed data
  */
 function parseFileList(fileList) {
+  // Pre-sort files by name to ensure correct order
+  fileList = preSortFiles(fileList);
+  // Initialize list for final output and excluded files
   const skippedFileNames = [];
   const parsedList = [];
 
-  fileList.forEach(currFile => {
-    // Find if file extension is known
-    fileType = types.knownMedias.find(
-      el => el.exts.indexOf(currFile.ext) >= 0
-    );
+  fileList.forEach((currFile, idx) => {
+    // Look for media type for current file
+    let mediaType;
 
-    currFile.type = fileType && fileType.type;
+    // Bypass file type checking if file has a document suffix
+    if (
+      currFile.name.match(
+        new RegExp("^.*" + esc(types.TYPE_SUFFIX_DOC) + "\\..*$", "g"),
+      )
+    ) {
+      mediaType = types.TYPE_MEDIA_DOC;
+    } else {
+      // Get media type by matching against known media extensions
+      mediaType = types.knownMedias.find(
+        el => el.exts.indexOf(currFile.ext) >= 0,
+      );
+    }
+    currFile.type = mediaType && mediaType.type;
 
     // If file is in skip list, stop processing here
-    if (skippedFileNames.indexOf(currFile.name) >= 0) return;
+    if (skippedFileNames.indexOf(currFile.name) !== -1) return;
 
     // Unknown extensions are passed as documents
     if (!currFile.type) currFile.type = types.TYPE_MEDIA_DOC;
-    // If a video or GIF file has a "_animation" suffix,
-    // it is passed as an animation instead
+    // If current file has a .gif extension, or is a MP4 file
+    // with the "_animation" suffix, set type to animation
     else if (
-      (currFile.type === types.TYPE_MEDIA_VIDEO ||
-        currFile.ext === types.TYPE_EXT_GIF) &&
-      currFile.name.match(
-        new RegExp("^.*" + types.TYPE_SUFFIX_ANIM + "\\..*$", "g")
-      )
+      currFile.ext === types.TYPE_EXT_GIF ||
+      (currFile.type === types.TYPE_MEDIA_VIDEO &&
+        currFile.name.match(
+          new RegExp("^.*" + esc(types.TYPE_SUFFIX_ANIM) + "\\..*$", "g"),
+        ))
     ) {
       currFile.type = types.TYPE_MEDIA_ANIM;
     }
 
-    // Look for a thumb image only for document, video
-    // and animation types
-    if (
-      [
-        types.TYPE_MEDIA_DOC,
-        types.TYPE_MEDIA_VIDEO,
-        types.TYPE_MEDIA_ANIM,
-      ].indexOf(currFile.type) >= 0
-    ) {
-      const thumbFileName = currFile.name + types.TYPE_SUFFIX_THUMB;
-      const thumbFile = fileList.find(el => {
-        return (
-          el.name === thumbFileName + types.TYPE_EXT_JPG ||
-          el.name === thumbFileName + types.TYPE_EXT_JPEG
-        );
-      });
-      if (thumbFile) {
-        skippedFileNames.push(thumbFile.name);
-        currFile.thumbFile = thumbFile;
-      }
-    }
+    // Look for either a caption file or a thumb file for current file
+    // Create regexp to match expected file name and all possible extensions
+    const thumbRegExp = new RegExp(
+      esc(currFile.name) +
+        esc(types.TYPE_SUFFIX_THUMB) +
+        `(${esc(types.TYPE_EXT_JPG)}|` +
+        `${esc(types.TYPE_EXT_JPEG)})`,
+    );
+    const captionRegExp = new RegExp(
+      esc(currFile.name) +
+        esc(types.TYPE_SUFFIX_CAPTION) +
+        `(${esc(types.TYPE_EXT_TXT)}|` +
+        `${esc(types.TYPE_EXT_HTM)}|` +
+        `${esc(types.TYPE_EXT_HTML)}|` +
+        `${esc(types.TYPE_EXT_MD)})`,
+    );
 
-    // Look for a caption file for every non-text file
-    // TODO: Condense this double iteration into one?
-    if (currFile.type !== types.TYPE_MEDIA_TEXT) {
-      const captionFileName = currFile.name + types.TYPE_SUFFIX_CAPTION;
-      const captionFile = fileList.find(el => {
-        return (
-          el.name === captionFileName + types.TYPE_EXT_TXT ||
-          el.name === captionFileName + types.TYPE_EXT_MD ||
-          el.name === captionFileName + types.TYPE_EXT_HTM ||
-          el.name === captionFileName + types.TYPE_EXT_HTML
-        );
-      });
-      if (captionFile) {
-        skippedFileNames.push(captionFile.name);
-        currFile.captionFile = captionFile;
+    // Slice the list from current file index, including the next 4 files
+    // As the file list is sorted by name, the thumb and caption files can only be
+    // within the next 3 adjacent files.
+    // This minimizes greatly the cost of iteration, as the search does not need to
+    // go through the entire list for every file
+    for (const matchFile of fileList.slice(idx, idx + 4)) {
+      if (matchFile.name.match(thumbRegExp)) {
+        currFile.thumbFile = matchFile;
+        skippedFileNames.push(matchFile.name);
+      } else if (matchFile.name.match(captionRegExp)) {
+        currFile.captionFile = matchFile;
+        skippedFileNames.push(matchFile.name);
       }
     }
 
     // Push current file to the return list
-    // Only push if file is not caption or thumb
     if (
-      !currFile.name.match(/^.*\.[a-zA-Z0-9]+_(caption|thumb)\.[a-zA-Z0-9]+$/g)
+      // Only push if file is not caption or thumb
+      // This check prevents thumb or caption files which may
+      // appear in the file list before their root counterpart
+      // from being pushed into the main list
+      !currFile.name.match(
+        new RegExp(
+          "^.*.[a-zA-Z0-9]+" +
+            `(${esc(types.TYPE_SUFFIX_CAPTION)}|` +
+            `${esc(types.TYPE_SUFFIX_THUMB)})` +
+            ".[a-zA-Z0-9]+$",
+          "g",
+        ),
+      )
     ) {
       parsedList.push(currFile);
     }
