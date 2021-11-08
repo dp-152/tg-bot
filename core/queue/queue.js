@@ -22,21 +22,49 @@ function addToQueue(messages) {
 function addToExclude(message) {
   console.log("Appending previous message to exclude list");
   exclude.push(message);
+
+  // Splice the item from the queue only after excluding
+  // This prevents both a reinsertion bug and a premature deletion bug
+  queue.splice(0, 1);
 }
 
 /**
  * Fetches the top n messages from the queue
  *
  * @param {number} n - Number of messages to retrieve from the queue
- * @returns {Array<object>} - Array of messages
+ * @returns {(Generator|false)} - Returns a generator object if the queue is not locked, false otherwise
  */
 function pullTopN(n) {
-  if (qLock) return false;
+  if (qLock) {
+    console.log("Queue is locked, cannot pull");
+    return false;
+  }
+  return pullGenerator(n);
+}
+
+/**
+ * Creates a generator for the top n messages from the queue
+ *
+ * @generator
+ * @param {number} n - Number of messages to retrieve from the queue
+ * @yields {object} - Generator containing messages
+ */
+function* pullGenerator(n) {
   qLock = true;
   console.log("Queue lock set");
-  const slice = queue.slice(0, n);
-  console.log(`Just sliced the queue. Gathered ${slice.length} elements`);
-  return slice;
+  for (let i = 0; i < n; i++) {
+    console.log("Yielding an item from the queue");
+    const item = queue[0];
+    if (!item) {
+      console.log("Queue is empty, breaking");
+      break;
+    }
+    yield item;
+  }
+  console.log("Yielding done");
+  console.log(`Current queue size: ${queue.length}`);
+  console.log("Queue lock released");
+  qLock = false;
 }
 
 /**
@@ -45,6 +73,7 @@ function pullTopN(n) {
  * @param {number} n - Number of messages to remove from the queue
  */
 function deleteTopN(n) {
+  return;
   console.log(`Deleting ${n} elements from the top of the queue`);
   queue.splice(0, n);
   console.log(`Current queue size: ${queue.length}`);
@@ -60,18 +89,27 @@ function deleteTopN(n) {
 function deleteNames(nameList) {
   for (const name of nameList) {
     console.log(`Deleting ${name} from queue`);
-    queue.splice(queue.findIndex(msg => {
-      if (msg.bundleMembers) {
-        for (const bMember of msg.bundleMembers) {
-          if (bMember.path === name) return true;
+    queue.splice(
+      queue.findIndex(msg => {
+        if (msg.bundleMembers) {
+          for (const bMember of msg.bundleMembers) {
+            if (bMember.path === name) return true;
+            if (bMember.thumbFile && bMember.thumbFile.path === name) {
+              return true;
+            }
+            if (bMember.captionFile && bMember.captionFile.path === name) {
+              return true;
+            }
+          }
+          return false;
         }
+        if (msg.path === name) return true;
+        if (msg.thumbFile && msg.thumbFile.path === name) return true;
+        if (msg.captionFile && msg.captionFile.path === name) return true;
         return false;
-      }
-      if (msg.path === name) return true;
-      if (msg.thumbFile.path === name) return true;
-      if (msg.captionFile.path === name) return true;
-      return false;
-    }), 1);
+      }),
+      1,
+    );
   }
 }
 
@@ -101,14 +139,14 @@ function getQueueFiles() {
       for (const bMember of msg.bundleMembers) {
         names.push(bMember.path);
         if (bMember.thumbFile) names.push(bMember.thumbFile.path);
-        if (bMember.captionFile) names.push(bMember.captionFile);
+        if (bMember.captionFile) names.push(bMember.captionFile.path);
       }
       continue;
     }
 
     names.push(msg.path);
-    if (msg.thumbFile) names.push(msg.thumbFile);
-    if (msg.captionFile) names.push(msg.captionFile);
+    if (msg.thumbFile) names.push(msg.thumbFile.path);
+    if (msg.captionFile) names.push(msg.captionFile.path);
   }
   return names;
 }
