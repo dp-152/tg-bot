@@ -1,3 +1,5 @@
+const { flattenFileObject } = require("../../util/helpers");
+
 const queue = [];
 const exclude = [];
 
@@ -86,30 +88,13 @@ function deleteTopN(n) {
 /**
  * Removes messages containing any file in nameList from the queue
  *
- * @param {Array<string>} nameList - List of file names to check and remove from the queue
+ * @param {Array<string>} pathList - List of file names to check and remove from the queue
  */
-function deleteNames(nameList) {
-  for (const name of nameList) {
+function deleteNames(pathList) {
+  for (const name of pathList) {
     console.log(`Deleting ${name} from queue`);
     queue.splice(
-      queue.findIndex(msg => {
-        if (msg.bundleMembers) {
-          for (const bMember of msg.bundleMembers) {
-            if (bMember.path === name) return true;
-            if (bMember.thumbFile && bMember.thumbFile.path === name) {
-              return true;
-            }
-            if (bMember.captionFile && bMember.captionFile.path === name) {
-              return true;
-            }
-          }
-          return false;
-        }
-        if (msg.path === name) return true;
-        if (msg.thumbFile && msg.thumbFile.path === name) return true;
-        if (msg.captionFile && msg.captionFile.path === name) return true;
-        return false;
-      }),
+      queue.findIndex(msg => flattenFileObject(msg).includes(name)),
       1,
     );
   }
@@ -137,18 +122,7 @@ function getQueueFiles() {
   // thumb and caption files
   for (const msg of queue) {
     if (exclude.includes(msg)) continue;
-    if (msg.bundleMembers) {
-      for (const bMember of msg.bundleMembers) {
-        names.push(bMember.path);
-        if (bMember.thumbFile) names.push(bMember.thumbFile.path);
-        if (bMember.captionFile) names.push(bMember.captionFile.path);
-      }
-      continue;
-    }
-
-    names.push(msg.path);
-    if (msg.thumbFile) names.push(msg.thumbFile.path);
-    if (msg.captionFile) names.push(msg.captionFile.path);
+    names.push(...flattenFileObject(msg));
   }
   return names;
 }

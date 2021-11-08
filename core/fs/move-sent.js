@@ -2,6 +2,7 @@ const fs = require("fs/promises");
 const path = require("path");
 
 const { options } = require("../../util/config");
+const { flattenFileObject } = require("../../util/helpers");
 
 /**
  * Moves a single file to the history directory.
@@ -32,25 +33,8 @@ async function moveSentFiles(fileList) {
   }
   const promises = [];
   for (const file of fileList) {
-    if (file.bundleMembers) {
-      for (const bundleMember of file.bundleMembers) {
-        promises.push(moveFile(bundleMember.path));
-        if (bundleMember.thumbFile) {
-          promises.push(moveFile(bundleMember.thumbFile.path));
-        }
-        if (bundleMember.captionFile) {
-          promises.push(moveFile(bundleMember.captionFile.path));
-        }
-      }
-      continue;
-    }
-
-    promises.push(moveFile(file.path));
-    if (file.thumbFile) {
-      promises.push(moveFile(file.thumbFile.path));
-    }
-    if (file.captionFile) {
-      promises.push(moveFile(file.captionFile.path));
+    for (const filePath of flattenFileObject(file)) {
+      promises.push(moveFile(filePath));
     }
   }
   await Promise.all(promises);
