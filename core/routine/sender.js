@@ -45,8 +45,8 @@ async function sendJob() {
     addToExclude(msg);
 
     let timeout;
-    if (msg.bundleName) timeout = 40;
-    else timeout = 15;
+    if (msg.bundleName) timeout = 25;
+    else timeout = 5;
 
     await new Promise(res => {
       setTimeout(res, timeout * 1000);
