@@ -16,7 +16,7 @@ async function moveFile(filePath) {
   return fs.rename(
     filePath,
     path.resolve(options.historyPath, path.basename(filePath)),
-  );
+  ).catch(err => console.error(err));
 }
 
 /**
