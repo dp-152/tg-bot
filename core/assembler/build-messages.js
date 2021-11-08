@@ -17,12 +17,12 @@ function getParseMode(file) {
 
   let textParseMode;
   if (file.ext === types.TYPE_EXT_MD) {
-    textParseMode = "MarkdownV2";
+    textParseMode = types.TYPE_PARSEMODE_MD;
   } else if (
     file.ext === types.TYPE_EXT_HTM ||
     file.ext === types.TYPE_EXT_HTML
   ) {
-    textParseMode = "HTML";
+    textParseMode = types.TYPE_PARSEMODE_HTML;
   } else {
     textParseMode = null;
   }
